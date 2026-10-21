@@ -1,0 +1,847 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
+<title>Kompyuter savodxonligi + AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600&family=Nunito:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap">
+<style>
+/* Layout: notebook-paper site; home = curriculum map, lesson = 16:9 slide stage with teacher notes below */
+:root{
+  --bg:#EEF2F9; --surface:#FFFFFF; --soft:#E3EAFB; --ink:#18213D; --muted:#56627F; --line:#CDD6E8;
+  --blue:#2D5BE3; --orange:#EE7F1B; --green:#16936A; --red:#D9413F; --yellow:#F5C33B; --on:#FFFFFF;
+  --grid:rgba(45,91,227,.07);
+  --f-display:"Fredoka","Nunito",system-ui,sans-serif;
+  --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0E1322; --surface:#171F35; --soft:#1F2A4A; --ink:#E7ECF8; --muted:#9BA7C4; --line:#2C3858;
+  --blue:#7D9CFF; --orange:#FFA24D; --green:#3CC98F; --red:#FF7B79; --yellow:#F6D266; --on:#0E1322;
+  --grid:rgba(125,156,255,.06); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1322; --surface:#171F35; --soft:#1F2A4A; --ink:#E7ECF8; --muted:#9BA7C4; --line:#2C3858;
+  --blue:#7D9CFF; --orange:#FFA24D; --green:#3CC98F; --red:#FF7B79; --yellow:#F6D266; --on:#0E1322;
+  --grid:rgba(125,156,255,.06); color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
+  background-size:24px 24px}
+.wrap{max-width:1180px;margin:0 auto;padding-block:28px 64px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.15}
+a{color:var(--blue)}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+.eyebrow{font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;font-weight:800;color:var(--muted)}
+
+/* ---------- home ---------- */
+.hero{display:grid;gap:14px;padding-block:8px 24px}
+.hero h1{font-size:clamp(2rem,5vw,3.4rem)}
+.hero h1 span{color:var(--blue)}
+.hero p{max-width:62ch;margin:0;color:var(--muted);font-size:1.08rem}
+.pillars{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-block:8px 28px}
+.pillar{background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:20px;display:grid;gap:8px;min-width:0}
+.pillar h3{font-size:1.25rem}
+.pillar ul{margin:0;padding-left:1.1em;color:var(--muted)}
+.tag{display:inline-block;font-weight:800;font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:99px;width:max-content}
+.t-hand{background:var(--orange);color:var(--on)}
+.t-ai{background:var(--blue);color:var(--on)}
+.t-task{background:var(--green);color:var(--on)}
+.t-quiz{background:var(--yellow);color:#1b1b1b}
+.t-home{background:var(--ink);color:var(--bg)}
+.timing{background:var(--surface);border-radius:16px;padding:18px 20px;border:2px solid var(--line);margin-bottom:36px}
+.timing h3{font-size:1.1rem;margin-bottom:12px}
+.tbar{display:flex;border-radius:10px;overflow:hidden;min-height:58px}
+.tbar div{padding:8px 10px;display:flex;flex-direction:column;justify-content:center;min-width:0;color:var(--on);font-size:.85rem;line-height:1.25}
+.tbar b{font-family:var(--f-mono);font-size:.95rem}
+.module{margin-bottom:34px}
+.module-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px;margin-bottom:14px}
+.module-h h2{font-size:1.5rem}
+.module-h p{margin:0;color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:8px;align-content:start;transition:border-color .15s,transform .15s}
+.card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.card:focus-visible{outline:3px solid var(--orange)}
+.card .num{font-family:var(--f-display);font-size:2.2rem;line-height:1;color:var(--blue)}
+.card h3{font-size:1.15rem}
+.card p{margin:0;color:var(--muted);font-size:.93rem}
+.card .chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:.78rem;background:var(--soft);border-radius:99px;padding:2px 9px;font-weight:700}
+.foot{margin-top:24px;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;color:var(--muted);font-size:.93rem}
+.foot b{color:var(--ink)}
+
+/* ---------- lesson ---------- */
+.topbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-bottom:14px}
+.btn{border:2px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 14px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--blue)}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:var(--on)}
+.lesson-title{flex:1;min-width:0}
+.lesson-title h1{font-size:clamp(1.3rem,3vw,1.9rem)}
+.stage{container-type:inline-size;background:var(--surface);border:2px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;aspect-ratio:16/9;position:relative}
+.stage:fullscreen{aspect-ratio:auto;width:100vw;height:100vh;border-radius:0;border:0}
+.slide{flex:1;min-height:0;overflow:auto;padding:3.4cqw 4.4cqw 2cqw;font-size:max(15px,1.85cqw);display:flex;flex-direction:column;gap:1.4cqw}
+.slide h2{font-size:1.75em}
+.slide ul,.slide ol{margin:0;padding-left:1.2em;display:grid;gap:.35em}
+.slide li::marker{color:var(--blue);font-weight:800}
+.slide p{margin:0}
+.slide .lead{color:var(--muted)}
+.sl-grid{display:grid;grid-template-columns:1fr 1.1fr;gap:3cqw;align-items:center;flex:1;min-height:0}
+.sl-grid.full{grid-template-columns:1fr;align-items:start}
+.sl-grid > *{min-width:0}
+.fig{min-width:0}
+.full .fig svg{max-height:30cqw;margin:0 auto}
+.fig svg{width:100%;height:auto;display:block;max-height:36cqw}
+.bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:2px solid var(--line);background:var(--soft);flex-wrap:wrap}
+.bar .count{font-family:var(--f-mono);font-weight:700;font-size:.9rem}
+.dots{display:flex;gap:5px;flex:1;flex-wrap:wrap;min-width:0}
+.dots button{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:var(--line)}
+.dots button.on{background:var(--blue)}
+.dots button.q{background:var(--yellow)}
+.dots button.q.on{background:var(--blue)}
+.ibtn{border:2px solid var(--line);background:var(--surface);border-radius:10px;min-width:42px;height:38px;font-weight:800;font-size:1.05rem}
+.ibtn:hover{border-color:var(--blue)}
+.note{margin-top:14px;background:var(--surface);border:2px dashed var(--line);border-radius:14px;padding:14px 18px;display:grid;gap:4px}
+.note b{font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;color:var(--orange)}
+.lesson-nav{display:flex;justify-content:space-between;gap:12px;margin-top:18px;flex-wrap:wrap}
+
+/* cover slide */
+.cover{justify-content:center;gap:2cqw}
+.cover .big{font-family:var(--f-display);font-size:5.4em;line-height:.9;color:var(--blue)}
+.cover h2{font-size:2.3em}
+.cover .goal{font-size:1.15em;color:var(--muted);max-width:52ch}
+.today{display:flex;flex-wrap:wrap;gap:.5em}
+.today span{background:var(--soft);border-radius:99px;padding:.25em .8em;font-weight:700;font-size:.9em}
+
+/* building blocks */
+.keys{display:grid;grid-template-columns:repeat(auto-fill,minmax(14em,1fr));gap:.6em}
+.key{display:flex;align-items:center;gap:.6em;background:var(--soft);border-radius:.6em;padding:.45em .6em;min-width:0}
+.kc{display:inline-flex;align-items:center;gap:.2em;flex-shrink:0}
+.kc i{font-style:normal;color:var(--muted);font-weight:800}
+kbd{font-family:var(--f-mono);font-size:.82em;font-weight:700;background:var(--surface);border:2px solid var(--line);border-bottom-width:4px;border-radius:.4em;padding:.05em .45em;color:var(--ink);white-space:nowrap}
+.flow{display:flex;flex-direction:column;gap:.35em;align-items:stretch}
+.full .flow{flex-direction:row}.full .flow .fa{transform:rotate(-90deg)}
+@container (max-width: 680px){.full .flow{flex-direction:column}.full .flow .fa{transform:none}}
+.fs{flex:1;background:var(--soft);border-radius:.7em;padding:.55em .8em;display:grid;gap:.1em;min-width:0}
+.fs b{font-family:var(--f-display);font-weight:600}
+.fs span{font-size:.85em;color:var(--muted)}
+.fs.c-or{background:var(--orange);color:var(--on)} .fs.c-or span{color:var(--on);opacity:.9}
+.fs.c-bl{background:var(--blue);color:var(--on)} .fs.c-bl span{color:var(--on);opacity:.9}
+.fs.c-gr{background:var(--green);color:var(--on)} .fs.c-gr span{color:var(--on);opacity:.9}
+.fs.c-rd{background:var(--red);color:var(--on)} .fs.c-rd span{color:var(--on);opacity:.9}
+.fa{align-self:center;width:1.2em;height:1.2em;flex-shrink:0;display:grid;place-items:center;color:var(--muted)}
+.fa::before{content:"";width:.55em;height:.55em;border-right:3px solid currentColor;border-bottom:3px solid currentColor;transform:translateY(-.15em) rotate(45deg)}
+.cmp{display:grid;grid-template-columns:1fr 1fr;gap:.8em}
+@container (max-width: 520px){.cmp{grid-template-columns:1fr}}
+.cmp > div{border-radius:.8em;padding:.7em .9em;border:2px solid var(--line);display:grid;gap:.4em;align-content:start;min-width:0}
+.cmp h3{font-size:1.05em}
+.cmp .good{border-color:var(--green)} .cmp .good h3{color:var(--green)}
+.cmp .bad{border-color:var(--red)} .cmp .bad h3{color:var(--red)}
+.cmp .blue{border-color:var(--blue)} .cmp .blue h3{color:var(--blue)}
+.cmp .orange{border-color:var(--orange)} .cmp .orange h3{color:var(--orange)}
+.cmp ul{font-size:.92em}
+.prompt{background:var(--soft);border-left:.3em solid var(--blue);border-radius:.6em;padding:.7em .9em;font-family:var(--f-mono);font-size:.78em;line-height:1.55;display:grid;gap:.3em}
+.prompt .pl{font-family:var(--f-body);font-size:.8em;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--blue)}
+.prompt.ans{border-left-color:var(--green)} .prompt.ans .pl{color:var(--green)}
+.prompt.bad{border-left-color:var(--red)} .prompt.bad .pl{color:var(--red)}
+.stack{display:grid;gap:.35em}
+.stack div{border-radius:.6em;padding:.5em .9em;display:flex;justify-content:space-between;gap:1em;align-items:center;flex-wrap:wrap}
+.stack small{opacity:.85}
+.rvkf{display:grid;grid-template-columns:repeat(2,1fr);gap:.6em}
+@container (max-width: 520px){.rvkf{grid-template-columns:1fr}}
+.rvkf div{border-radius:.8em;padding:.6em .8em;display:grid;gap:.2em;color:var(--on)}
+.rvkf .L{font-family:var(--f-display);font-size:1.9em;line-height:1}
+.rvkf em{font-style:normal;font-size:.88em;opacity:.95}
+.tbl{width:100%;border-collapse:collapse;font-size:.9em}
+.tbl th,.tbl td{text-align:left;padding:.4em .6em;border-bottom:2px solid var(--line);vertical-align:top}
+.tbl th{font-family:var(--f-display);font-weight:600}
+.tbl code{font-family:var(--f-mono);font-size:.9em;font-weight:700;color:var(--blue)}
+.tblwrap{overflow-x:auto}
+.legend{display:flex;flex-wrap:wrap;gap:.4em .9em;font-size:.85em}
+.legend span{display:inline-flex;align-items:center;gap:.35em}
+.legend i{width:.9em;height:.9em;border-radius:.2em;display:inline-block}
+.phone{max-width:20em;margin:0 auto;background:var(--soft);border:3px solid var(--ink);border-radius:1.6em;padding:1.2em .9em;display:grid;gap:.6em}
+.sms{background:var(--surface);border-radius:1em 1em 1em .2em;padding:.7em .9em;font-size:.9em;line-height:1.45}
+.flag{background:color-mix(in srgb,var(--red) 22%,transparent);border-bottom:2px solid var(--red);padding:0 .15em;border-radius:.2em}
+.flags{display:grid;gap:.3em;font-size:.85em}
+.flags span::before{content:"";display:inline-block;width:.6em;height:.6em;border-radius:50%;background:var(--red);margin-right:.45em}
+.checks{list-style:none;padding:0 !important}
+.checks li{padding-left:1.5em;position:relative}
+.checks li::before{content:"";position:absolute;left:0;top:.25em;width:.95em;height:.95em;border:2px solid var(--green);border-radius:.25em}
+.warn{background:color-mix(in srgb,var(--orange) 16%,transparent);border-radius:.6em;padding:.5em .8em;font-size:.92em}
+.warn b{color:var(--orange)}
+
+/* quiz */
+.quiz h2{font-size:1.6em}
+.opts{display:grid;gap:.6em;max-width:44em}
+.opt{border:2px solid var(--line);background:var(--surface);border-radius:.8em;padding:.6em 1em;text-align:left;font-size:1em;font-weight:700;display:flex;gap:.8em;align-items:center}
+.opt:hover{border-color:var(--blue)}
+.opt .l{font-family:var(--f-display);width:1.7em;height:1.7em;border-radius:50%;background:var(--soft);display:grid;place-items:center;flex-shrink:0}
+.opt.ok{border-color:var(--green);background:color-mix(in srgb,var(--green) 16%,var(--surface))}
+.opt.ok .l{background:var(--green);color:var(--on)}
+.opt.no{border-color:var(--red);background:color-mix(in srgb,var(--red) 12%,var(--surface))}
+.opt.no .l{background:var(--red);color:var(--on)}
+.why{color:var(--muted)}
+
+/* svg classes */
+.st{stroke:var(--ink);stroke-width:2.5;stroke-linejoin:round}
+.st1{stroke:var(--ink);stroke-width:1.5;stroke-linejoin:round}
+.dash{fill:none;stroke:var(--blue);stroke-width:2;stroke-dasharray:6 5}
+.f-surf{fill:var(--surface)} .f-soft{fill:var(--soft)} .f-blue{fill:var(--blue)} .f-or{fill:var(--orange)}
+.f-gr{fill:var(--green)} .f-red{fill:var(--red)} .f-yel{fill:var(--yellow)} .f-ink{fill:var(--ink)}
+.f-mut{fill:var(--muted)} .f-line{fill:var(--line)} .f-none{fill:none}
+.t{fill:var(--ink);font-family:var(--f-body);font-weight:700}
+.tm{fill:var(--muted);font-family:var(--f-body);font-weight:600}
+.tb{fill:var(--on);font-family:var(--f-display);font-weight:600}
+.tinv{fill:var(--bg);font-family:var(--f-body);font-weight:700}
+.tmono{fill:var(--ink);font-family:var(--f-mono);font-weight:700}
+.ln{stroke:var(--ink);stroke-width:2;fill:none}
+.lnm{stroke:var(--muted);stroke-width:1.5;fill:none;stroke-dasharray:4 4}
+.arr{stroke:var(--ink);stroke-width:2.5;fill:none}
+.lred{stroke:var(--red);stroke-width:2;stroke-dasharray:6 4}
+
+@container (max-width: 680px){
+  .sl-grid{grid-template-columns:1fr}
+  .slide{padding:20px 18px 14px}
+  .cover .big{font-size:3.6em}
+}
+@media (max-width: 700px){
+  .stage{aspect-ratio:auto}
+  .slide{min-height:420px}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0L10 5L0 10z" class="f-ink"/>
+    </marker>
+  </defs>
+</svg>
+
+<div class="wrap" id="app"></div>
+
+<script>
+/* ===================== helpers ===================== */
+const S=(vb,inner,label)=>`<svg viewBox="${vb}" role="img" aria-label="${label}">${inner}</svg>`;
+const T=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||15}" class="${o.c||'t'}">${s}</text>`;
+const R=(x,y,w,h,c='f-surf',rx=8,st='st')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" class="${c} ${st}"/>`;
+const B=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="13" class="f-or"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="15" class="tb">${n}</text>`;
+const L=(x1,y1,x2,y2,c='arr',m=true)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}" ${m?'marker-end="url(#ah)"':''}/>`;
+
+const keys=list=>`<div class="keys">${list.map(([k,d])=>`<div class="key"><span class="kc">${k.split('+').map(x=>`<kbd>${x}</kbd>`).join('<i>+</i>')}</span><span>${d}</span></div>`).join('')}</div>`;
+const flow=steps=>`<div class="flow">${steps.map(s=>`<div class="fs ${s.c||''}"><b>${s.t}</b>${s.d?`<span>${s.d}</span>`:''}</div>`).join('<div class="fa" aria-hidden="true"></div>')}</div>`;
+const cmp=(a,b)=>`<div class="cmp">${[a,b].map(x=>`<div class="${x.c}"><h3>${x.h}</h3><ul>${x.i.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('')}</div>`;
+const prompt=(text,label='Prompt',cls='')=>`<div class="prompt ${cls}"><span class="pl">${label}</span>${text}</div>`;
+const ul=a=>`<ul>${a.map(i=>`<li>${i}</li>`).join('')}</ul>`;
+const ol=a=>`<ol>${a.map(i=>`<li>${i}</li>`).join('')}</ol>`;
+
+/* ===================== diagrams ===================== */
+const D={
+computer(){
+  let k='';for(let r=0;r<3;r++)for(let c=0;c<14;c++)k+=`<rect x="${31+c*17}" y="${242+r*13}" width="13" height="9" rx="2" class="f-surf"/>`;
+  return S('0 0 480 310',`
+  ${R(20,14,250,168,'f-soft',12)}${R(36,30,218,136,'f-surf',4)}
+  ${R(56,50,120,70,'f-soft',4,'st1')}<rect x="56" y="50" width="120" height="14" class="f-blue"/>
+  <rect x="190" y="60" width="44" height="8" rx="3" class="f-line"/><rect x="190" y="76" width="34" height="8" rx="3" class="f-line"/>
+  <rect x="131" y="182" width="28" height="22" class="f-mut"/>${R(96,202,98,10,'f-mut',4)}
+  ${R(300,14,110,200,'f-soft',10)}
+  <line x1="318" y1="44" x2="392" y2="44" class="ln"/><line x1="318" y1="60" x2="392" y2="60" class="ln"/>
+  <circle cx="355" cy="186" r="10" class="f-gr"/>
+  ${R(22,232,248,52,'f-soft',8)}${k}
+  <rect x="330" y="236" width="46" height="64" rx="23" class="f-soft st"/><line x1="353" y1="236" x2="353" y2="260" class="ln"/>
+  ${B(22,16,1)}${B(410,16,2)}${B(22,234,3)}${B(380,238,4)}`,'Kompyuter qismlari: monitor, tizim bloki, klaviatura, sichqoncha');
+},
+mouse(){
+  return S('0 0 480 280',`
+  <rect x="170" y="30" width="140" height="220" rx="70" class="f-surf st"/>
+  <path d="M240 30A70 70 0 0 0 170 100L170 120L240 120Z" class="f-blue" opacity=".35"/>
+  <path d="M240 30A70 70 0 0 1 310 100L310 120L240 120Z" class="f-or" opacity=".35"/>
+  <rect x="170" y="30" width="140" height="220" rx="70" class="f-none st"/>
+  <line x1="240" y1="30" x2="240" y2="120" class="ln"/><line x1="170" y1="120" x2="310" y2="120" class="ln"/>
+  <rect x="231" y="52" width="18" height="40" rx="9" class="f-ink"/>
+  ${T(150,62,'Chap tugma',{a:'end',s:17})}${T(150,84,'1 marta: tanlash',{a:'end',c:'tm',s:14})}${T(150,102,'2 marta: ochish',{a:'end',c:'tm',s:14})}
+  ${T(330,62,"O'ng tugma",{a:'start',s:17})}${T(330,84,'menyu ochadi',{a:'start',c:'tm',s:14})}
+  <line x1="249" y1="80" x2="326" y2="160" class="lnm"/>
+  ${T(330,166,"G'ildirak",{a:'start',s:17})}${T(330,186,'sahifani aylantiradi',{a:'start',c:'tm',s:14})}`,'Sichqoncha tugmalari');
+},
+desktop(){
+  const icons=['Bu kompyuter','Savat','Hujjatlar'].map((n,i)=>`${R(26,18+i*66,34,30,'f-yel',5,'st1')}${T(43,64+i*66,n,{s:11})}`).join('');
+  return S('0 0 480 300',`
+  <rect x="2" y="2" width="476" height="296" rx="12" class="f-soft st"/>
+  ${icons}
+  ${R(150,36,280,180,'f-surf',8)}<path d="M158 36h264a8 8 0 0 1 8 8v20H150V44a8 8 0 0 1 8-8z" class="f-line"/>
+  ${T(164,55,'Bloknot',{a:'start',s:13})}
+  ${T(350,56,'—',{s:16})}${T(377,56,'☐',{s:15})}<rect x="396" y="38" width="32" height="24" rx="4" class="f-red"/>${T(412,56,'✕',{s:14,c:'tb'})}
+  <rect x="170" y="84" width="200" height="8" rx="3" class="f-line"/><rect x="170" y="102" width="160" height="8" rx="3" class="f-line"/><rect x="170" y="120" width="180" height="8" rx="3" class="f-line"/>
+  <path d="M2 262h476v24a12 12 0 0 1-12 12H14a12 12 0 0 1-12-12z" class="f-ink"/>
+  <rect x="198" y="270" width="9" height="9" class="f-blue"/><rect x="209" y="270" width="9" height="9" class="f-blue"/><rect x="198" y="281" width="9" height="9" class="f-blue"/><rect x="209" y="281" width="9" height="9" class="f-blue"/>
+  <rect x="230" y="271" width="18" height="18" rx="3" class="f-yel"/><rect x="256" y="271" width="18" height="18" rx="3" class="f-or"/><rect x="282" y="271" width="18" height="18" rx="3" class="f-gr"/>
+  ${T(404,285,'UZ',{s:12,c:'tinv'})}${T(450,285,'14:30',{s:12,c:'tinv'})}
+  ${B(100,226,1)}${B(76,26,2)}${B(452,110,3)}${B(130,281,4)}${B(208,247,5)}${B(375,281,6)}`,'Windows ish stoli');
+},
+winctl(){
+  return S('0 0 480 175',`
+  <rect x="20" y="18" width="440" height="52" rx="8" class="f-soft st"/>
+  ${T(40,50,'Hujjat.txt - Bloknot',{a:'start',s:16})}
+  ${R(300,18,50,52,'f-surf',0,'st1')}${R(350,18,50,52,'f-surf',0,'st1')}<rect x="400" y="18" width="60" height="52" class="f-red st1"/>
+  ${T(325,51,'—',{s:22})}${T(375,52,'☐',{s:22})}${T(430,52,'✕',{s:22,c:'tb'})}
+  <line x1="325" y1="72" x2="325" y2="92" class="lnm"/><line x1="375" y1="72" x2="375" y2="117" class="lnm"/><line x1="430" y1="72" x2="430" y2="142" class="lnm"/>
+  ${T(325,108,'Kichraytirish',{s:15})}${T(360,133,'Kattalashtirish',{s:15})}${T(430,158,'Yopish',{s:15})}`,'Oyna tugmalari');
+},
+keyboard(){
+  let k='';const key=(x,y,w,c,lab)=>{k+=`<rect x="${x}" y="${y}" width="${w}" height="30" rx="5" class="${c} st1"/>`;if(lab)k+=T(x+w/2,y+20,lab,{s:11,c:c==='f-surf'||c==='f-line'||c==='f-yel'?'t':'tb'})};
+  for(let i=0;i<12;i++)key(10+i*34,10,30,'f-gr');key(418,10,62,'f-or','Backspace');
+  key(10,46,46,'f-line','Tab');for(let i=0;i<11;i++)key(60+i*34,46,30,'f-blue');key(434,46,46,'f-line');
+  key(10,82,56,'f-or','Caps');for(let i=0;i<10;i++)key(70+i*34,82,30,'f-blue');key(410,82,70,'f-or','Enter');
+  key(10,118,74,'f-or','Shift');for(let i=0;i<9;i++)key(88+i*34,118,30,'f-blue');key(394,118,86,'f-or','Shift');
+  key(10,154,40,'f-line','Ctrl');key(54,154,40,'f-line','Win');key(98,154,40,'f-line','Alt');key(142,154,200,'f-yel','Probel');key(346,154,40,'f-line','Alt');
+  key(392,154,26,'f-red');key(422,154,26,'f-red');key(452,154,26,'f-red');
+  return S('0 0 490 194',k,'Klaviatura zonalari')+`<div class="legend" style="margin-top:.6em">
+  <span><i style="background:var(--blue)"></i>Harflar</span><span><i style="background:var(--green)"></i>Raqamlar</span>
+  <span><i style="background:var(--orange)"></i>Shift, Caps, Enter, Backspace</span><span><i style="background:var(--yellow)"></i>Probel</span><span><i style="background:var(--red)"></i>Strelkalar</span></div>`;
+},
+tree(items,label,h){
+  const last={};let g='';
+  items.forEach(([d,name,type,hl],i)=>{
+    const y=26+i*30,x=16+d*30;
+    if(d>0){const py=last[d-1];g+=`<path d="M${x-16} ${py+10}V${y}H${x-4}" class="ln"/>`;}
+    last[d]=y;
+    g+= type==='d'
+      ? `<path d="M${x} ${y-9}h9l3 3h12v15h-24z" class="f-yel st1"/>`
+      : `<path d="M${x+3} ${y-11}h12l5 5v17h-17z" class="${hl?'f-blue':'f-surf'} st1"/>`;
+    g+=T(x+32,y+5,name,{a:'start',s:15,c:type==='d'?'t':'tmono'});
+  });
+  return S(`0 0 480 ${h||items.length*30+16}`,g,label);
+},
+ext(){
+  const L2=[['.docx','f-blue','Word hujjat'],['.xlsx','f-gr','Excel jadval'],['.pptx','f-or','Taqdimot'],['.pdf','f-red','PDF hujjat'],['.jpg','f-yel','Rasm'],['.zip','f-line','Arxiv'],['.exe','f-ink','Dastur']];
+  return S('0 0 480 250',L2.map(([e,c,n],i)=>{const cx=60+(i%4)*120,y=12+Math.floor(i/4)*124;
+    return `<path d="M${cx-26} ${y}h36l16 16v62h-52z" class="f-surf st"/><path d="M${cx+10} ${y}v16h16" class="ln"/>
+    <rect x="${cx-34}" y="${y+40}" width="68" height="22" rx="5" class="${c}"/>${T(cx,y+56,e,{s:14,c:c==='f-yel'||c==='f-line'?'t':'tb'})}
+    ${T(cx,y+100,n,{s:13,c:'tm'})}`}).join(''),'Fayl turlari');
+},
+copyMove(){
+  const box=(x,y,label,file,ghost)=>`${R(x,y,110,72,'f-soft',8)}${T(x+55,y-6,label,{s:13,c:'tm'})}`+
+    (file?`<path d="M${x+42} ${y+16}h18l8 8v28h-26z" class="${ghost?'f-none lnm':'f-blue st1'}"/>`:'');
+  return S('0 0 480 230',`
+  ${T(20,40,'Nusxa',{a:'start',s:17})}${T(20,60,'olish',{a:'start',s:17})}
+  ${box(150,22,'A papka',1)}${L(266,58,322,58)}${box(330,22,'B papka',1)}
+  ${T(20,160,"Ko'chirish",{a:'start',s:17})}
+  ${box(150,130,'A papka',1,1)}${L(266,166,322,166)}${box(330,130,'B papka',1)}
+  ${T(240,222,"Nusxada fayl ikkita bo'ladi, ko'chirishda bitta qoladi",{s:13,c:'tm'})}`,'Nusxa olish va ko\'chirish farqi');
+},
+explorer(){
+  const side=['Ish stoli','Yuklamalar','Hujjatlar','Bu kompyuter','C: disk','D: disk'].map((n,i)=>T(24,84+i*26,n,{a:'start',s:12})).join('');
+  let files='';['Rasmlar','Hujjatlar','Jadvallar','Arxivlar'].forEach((n,i)=>{const x=140+i*80;files+=`<path d="M${x} 84h18l5 5h27v34h-50z" class="f-yel st1"/>${T(x+25,142,n,{s:11})}`});
+  ['referat.docx','baho.xlsx','rasm.jpg'].forEach((n,i)=>{const x=148+i*80;files+=`<path d="M${x} 162h26l8 8v32h-34z" class="f-surf st1"/>${T(x+17,220,n,{s:10,c:'tm'})}`});
+  return S('0 0 480 260',`
+  ${R(10,10,460,240,'f-surf',10)}
+  ${R(122,20,236,26,'f-soft',6,'st1')}${T(132,38,'D:\\ › Codial_Ali',{a:'start',s:12,c:'tmono'})}
+  ${R(366,20,94,26,'f-soft',6,'st1')}${T(376,38,'Qidirish',{a:'start',s:12,c:'tm'})}
+  <rect x="11" y="56" width="100" height="193" class="f-soft"/>${side}
+  ${files}
+  ${B(108,33,1)}${B(60,235,2)}${B(300,236,3)}${B(462,33,4)}`,'Explorer oynasi');
+},
+browser(){
+  return S('0 0 480 230',`
+  ${R(10,10,460,210,'f-surf',10)}
+  <path d="M20 44v-18a6 6 0 0 1 6-6h98a6 6 0 0 1 6 6v18z" class="f-surf st1"/>${T(30,37,'Codial',{a:'start',s:12})}
+  <path d="M134 44v-18a6 6 0 0 1 6-6h98a6 6 0 0 1 6 6v18z" class="f-soft st1"/>${T(144,37,'Google',{a:'start',s:12,c:'tm'})}
+  ${T(262,38,'+',{s:18})}
+  <rect x="11" y="44" width="458" height="38" class="f-soft"/>
+  ${T(30,69,'←',{s:17})}${T(55,69,'↻',{s:17})}
+  ${R(76,52,280,22,'f-surf',11,'st1')}${T(90,68,'https://codial.uz',{a:'start',s:12,c:'tmono'})}
+  ${T(374,69,'☆',{s:18})}${T(436,69,'↓',{s:18})}
+  <rect x="40" y="160" width="300" height="10" rx="4" class="f-line"/><rect x="40" y="180" width="220" height="10" rx="4" class="f-line"/><rect x="40" y="200" width="260" height="10" rx="4" class="f-line"/>
+  ${[[75,46,1],[43,84,2],[216,76,3],[374,84,4],[436,84,5]].map(([x,y,n])=>`<line x1="${x}" y1="${y}" x2="${x}" y2="${n===3?105:110}" class="lnm"/>${B(x,n===3?118:122,n)}`).join('')}`,'Brauzer qismlari');
+},
+email(){
+  return S('0 0 480 250',`
+  ${R(10,10,460,230,'f-surf',10)}
+  ${T(28,44,'Kimga:',{a:'start',s:14,c:'tm'})}${T(90,44,'ustoz@gmail.com',{a:'start',s:14,c:'tmono'})}<line x1="20" y1="58" x2="460" y2="58" class="lnm"/>
+  ${T(28,82,'Mavzu:',{a:'start',s:14,c:'tm'})}${T(90,82,'Uy vazifasi, Ali Valiyev, 7-sinf',{a:'start',s:14})}<line x1="20" y1="96" x2="460" y2="96" class="lnm"/>
+  ${T(28,122,'Assalomu alaykum, ustoz!',{a:'start',s:14})}
+  <rect x="28" y="134" width="300" height="8" rx="3" class="f-line"/><rect x="28" y="150" width="240" height="8" rx="3" class="f-line"/>
+  ${R(28,172,170,30,'f-soft',8,'st1')}<path d="M40 180h10l4 4v12h-14z" class="f-blue"/>${T(62,192,'Ali_birinchi.txt',{a:'start',s:12,c:'tmono'})}
+  <rect x="356" y="196" width="96" height="34" rx="17" class="f-blue"/>${T(404,218,'Yuborish',{s:14,c:'tb'})}
+  ${B(452,40,1)}${B(452,78,2)}${B(452,138,3)}${B(214,186,4)}${B(336,212,5)}`,'Elektron xat qismlari');
+},
+page(){
+  return S('0 0 360 440',`
+  ${R(20,10,320,420,'f-surf',4)}<rect x="60" y="40" width="250" height="362" class="dash"/>
+  <rect x="80" y="58" width="180" height="16" rx="3" class="f-ink"/>
+  <rect x="80" y="98" width="130" height="12" rx="3" class="f-blue"/>
+  ${[124,138,152,166].map(y=>`<rect x="80" y="${y}" width="${y===166?150:210}" height="6" rx="3" class="f-mut"/>`).join('')}
+  <rect x="80" y="186" width="210" height="60" class="f-soft st1"/><line x1="80" y1="206" x2="290" y2="206" class="ln"/><line x1="80" y1="226" x2="290" y2="226" class="ln"/><line x1="150" y1="186" x2="150" y2="246" class="ln"/><line x1="220" y1="186" x2="220" y2="246" class="ln"/>
+  <rect x="80" y="262" width="90" height="64" class="f-yel st1"/><path d="M84 320l22-26 16 16 12-10 32 20z" class="f-gr"/>
+  ${[268,282,296,310].map(y=>`<rect x="182" y="${y}" width="108" height="6" rx="3" class="f-mut"/>`).join('')}
+  ${T(185,420,'3',{s:13,c:'tm'})}
+  ${B(44,32,1)}${B(280,66,2)}${B(228,104,3)}${B(318,145,4)}${B(318,216,5)}${B(66,268,6)}${B(208,418,7)}`,'Word sahifasi tuzilishi');
+},
+excel(){
+  const cols=[['A',50,120],['B',170,100],['C',270,100],['D',370,100]];
+  const rows=[['Ism','Ball','Natija'],['Ali','85',"O'tdi"],['Laylo','92',"O'tdi"],['Jasur','58','Yiqildi'],['Madina','74',"O'tdi"],["O'rtacha",'77,25','']];
+  let g=`${R(10,10,460,28,'f-soft',6,'st1')}${T(24,29,'fx',{a:'start',s:13,c:'tm'})}${T(56,29,'=AVERAGE(B2:B5)',{a:'start',s:14,c:'tmono'})}`;
+  g+=`<rect x="10" y="48" width="40" height="24" class="f-soft st1"/>`;
+  cols.forEach(([c,x,w])=>g+=`<rect x="${x}" y="48" width="${w}" height="24" class="f-soft st1"/>${T(x+w/2,65,c,{s:13})}`);
+  rows.forEach((r,i)=>{const y=72+i*28;g+=`<rect x="10" y="${y}" width="40" height="28" class="f-soft st1"/>${T(30,y+19,i+1,{s:13})}`;
+    cols.forEach(([c,x,w],j)=>{g+=`<rect x="${x}" y="${y}" width="${w}" height="28" class="f-surf st1"/>`;const v=r[j];if(v)g+=T(x+8,y+19,v,{a:'start',s:13,c:i===0?'t':(v==='Yiqildi'?'t':'tm')})});});
+  g+=`<rect x="170" y="212" width="100" height="28" class="f-none" style="stroke:var(--blue);stroke-width:4"/>`;
+  return S('0 0 480 250',g,'Excel jadvali');
+},
+ifd(){
+  return S('0 0 480 250',`
+  ${R(170,8,140,38,'f-soft',8)}${T(240,32,'Ball (C2)',{s:15})}
+  ${L(240,46,240,58)}
+  <polygon points="240,62 335,110 240,158 145,110" class="f-yel st"/>${T(240,116,'C2 ≥ 60 ?',{s:17})}
+  ${L(150,118,86,170)}${L(330,118,394,170)}
+  ${T(100,138,"Yo'q",{s:15,c:'tm'})}${T(380,138,'Ha',{s:15,c:'tm'})}
+  <rect x="20" y="174" width="130" height="44" rx="10" class="f-red"/>${T(85,202,'"Yiqildi"',{s:16,c:'tb'})}
+  <rect x="330" y="174" width="130" height="44" rx="10" class="f-gr"/>${T(395,202,'"O\'tdi"',{s:16,c:'tb'})}
+  ${T(240,244,'=IF(C2>=60; "O\'tdi"; "Yiqildi")',{s:14,c:'tmono'})}`,'IF formulasi sxemasi');
+},
+chart(){
+  const d=[['Ali',85],['Laylo',92],['Jasur',58],['Madina',74]];const y=v=>210-v*1.9;
+  let g='';[0,25,50,75,100].forEach(v=>g+=`<line x1="56" y1="${y(v)}" x2="460" y2="${y(v)}" class="lnm" style="stroke-dasharray:none;opacity:.45"/>${T(48,y(v)+5,v,{a:'end',s:12,c:'tm'})}`);
+  d.forEach(([n,v],i)=>{const x=80+i*96;g+=`<rect x="${x}" y="${y(v)}" width="60" height="${v*1.9}" rx="4" class="${v<60?'f-red':'f-blue'}"/>${T(x+30,y(v)-7,v,{s:14})}${T(x+30,232,n,{s:14,c:'tm'})}`});
+  g+=`<line x1="56" y1="${y(60)}" x2="460" y2="${y(60)}" class="lred"/>${T(458,y(60)-6,"o'tish bali: 60",{a:'end',s:12,c:'tm'})}`;
+  return S('0 0 480 245',g,'Baholar ustunli diagrammasi');
+},
+slides(){
+  let bad='';for(let i=0;i<12;i++)bad+=`<rect x="24" y="${44+i*8}" width="${180-(i%3)*22}" height="4" rx="2" class="f-mut"/>`;
+  return S('0 0 480 200',`
+  ${R(10,14,214,130,'f-surf',6)}<rect x="24" y="26" width="70" height="7" rx="2" class="f-ink"/>${bad}
+  ${R(256,14,214,130,'f-surf',6)}<rect x="272" y="30" width="120" height="14" rx="3" class="f-ink"/>
+  <rect x="272" y="58" width="86" height="70" class="f-yel st1"/><path d="M276 124l20-24 14 14 12-10 32 20z" class="f-gr"/>
+  <rect x="370" y="66" width="86" height="8" rx="3" class="f-mut"/><rect x="370" y="88" width="70" height="8" rx="3" class="f-mut"/><rect x="370" y="110" width="80" height="8" rx="3" class="f-mut"/>
+  <circle cx="117" cy="170" r="13" class="f-red"/>${T(117,176,'✕',{s:14,c:'tb'})}${T(117,197,"Matn ko'p va mayda",{s:13,c:'tm'})}
+  <circle cx="363" cy="170" r="13" class="f-gr"/>${T(363,176,'✓',{s:15,c:'tb'})}${T(363,197,'1 fikr, rasm, kam matn',{s:13,c:'tm'})}`,'Yomon va yaxshi slayd');
+},
+backup(){
+  const file=(x,y)=>`<path d="M${x} ${y}h16l6 6v22h-22z" class="f-blue st1"/>`;
+  return S('0 0 480 220',`
+  ${T(240,24,'3 nusxa · 2 xil qurilma · 1 tasi uydan tashqarida',{s:15})}
+  ${R(40,60,100,70,'f-soft',8)}<rect x="80" y="130" width="20" height="14" class="f-mut"/>${R(62,142,56,8,'f-mut',3)}${file(79,80)}
+  ${R(212,74,56,44,'f-soft',8)}<rect x="226" y="62" width="28" height="12" class="f-mut"/>${file(229,82)}
+  <path d="M362 128a24 24 0 0 1 4-46a32 32 0 0 1 60-4a24 24 0 0 1 16 50z" class="f-soft st"/>${file(392,92)}
+  ${T(90,176,'1-nusxa',{s:15})}${T(90,196,'Kompyuter',{s:13,c:'tm'})}
+  ${T(240,176,'2-nusxa',{s:15})}${T(240,196,'Fleshka',{s:13,c:'tm'})}
+  ${T(400,176,'3-nusxa',{s:15})}${T(400,196,'Bulut (Google Drive)',{s:13,c:'tm'})}`,'3-2-1 zaxira qoidasi');
+}
+};
+
+/* ===================== content ===================== */
+const MODULES=[
+ {n:1,t:"Kompyuter va fayllar",d:"AI qila olmaydigan poydevor",l:[1,2,3]},
+ {n:2,t:"Internet va AI bilan to'g'ri ishlash",d:"Qidiruv, akkaunt, prompt va tekshirish",l:[4,5]},
+ {n:3,t:"Hujjat, jadval, taqdimot",d:"AI yozadi, siz yasaysiz",l:[6,7,8,9,10]},
+ {n:4,t:"Bulut, xavfsizlik va loyiha",d:"Ulashish, himoya va yakuniy ish",l:[11,12]}
+];
+
+const LESSONS=[
+/* ---------------- 1 ---------------- */
+{t:"Boshlang'ich kompyuter va Windows",goal:"Kompyuterni yoqish, Windowsda erkin harakat qilish va birinchi faylni saqlash.",
+ tags:["Qismlar","Sichqoncha va klaviatura","Windows"],
+ today:["Kompyuter qismlari","Sichqoncha","Klaviatura","Ish stoli","Oynalar","Birinchi fayl"],
+ s:[
+ {b:'hand',t:"Kompyuter nimalardan iborat?",x:ol(["<b>Monitor</b>: hamma narsani ko'rsatadi","<b>Tizim bloki</b>: kompyuterning “miyasi” shu yerda","<b>Klaviatura</b>: harf va buyruqlarni yozamiz","<b>Sichqoncha</b>: ko'rsatamiz va bosamiz"])+`<p class="lead">Noutbukda hammasi bitta korpusda, sichqoncha o'rnida sensorli panel (touchpad) bor.</p>`,d:D.computer(),
+  n:"Iloji bo'lsa, ochiq tizim blokini yoki eski qismlarni qo'lda ko'rsating. Bolalar ko'rgan narsani yaxshi eslab qoladi."},
+ {b:'hand',t:"Kompyuter qanday ishlaydi?",x:ul(["<b>Protsessor</b> = oshpaz: hamma ishni tez bajaradi","<b>Operativ xotira (RAM)</b> = oshxona stoli: hozir ochiq narsalar turadi. O'chirsangiz, stol tozalanadi","<b>Disk</b> = muzlatkich: fayllar o'chirilganda ham saqlanib qoladi"]),
+  d:flow([{t:"Kiritish",d:"klaviatura, sichqoncha",c:'c-bl'},{t:"Ishlov berish",d:"protsessor + RAM",c:'c-or'},{t:"Chiqarish",d:"monitor, karnay, printer",c:'c-gr'}])+`<div style="margin-top:.6em">${flow([{t:"Saqlash",d:"disk: fayllar doimiy turadi"}])}</div>`,
+  n:"Oshxona o'xshatishini so'rab tekshiring: “Kompyuterni o'chirsak, stol (RAM) dagi ovqat nima bo'ladi?”"},
+ {b:'hand',t:"Operatsion tizim nima?",x:ul(["Operatsion tizim (OT) kompyuterni boshqaradi: dasturlar va qurilmalar orasida “tarjimon”","Bizda <b>Windows 10/11</b>","Boshqa OT: macOS (Apple), Linux, telefonda Android va iOS"]),
+  d:`<div class="stack">
+   <div style="background:var(--yellow);color:#1b1b1b"><b>Siz</b><small>bosasiz, yozasiz</small></div>
+   <div style="background:var(--orange);color:var(--on)"><b>Dasturlar</b><small>Word, brauzer, o'yin</small></div>
+   <div style="background:var(--blue);color:var(--on)"><b>Operatsion tizim</b><small>Windows</small></div>
+   <div style="background:var(--ink);color:var(--bg)"><b>Qurilmalar</b><small>protsessor, disk, monitor</small></div></div>`},
+ {b:'hand',t:"Yoqish, qulflash, o'chirish",x:flow([{t:"Yoqish tugmasi",c:'c-gr'},{t:"Parol yoki PIN"},{t:"Ish stoli",c:'c-bl'}])+`<div style="margin-top:.8em">${keys([["Win+L","Qulflash (tanaffusda)"],["Start","Quvvat → O'chirish"],["Start","Quvvat → Qayta yuklash"]])}</div>`,
+  d:`<div class="warn"><b>Diqqat:</b> kompyuterni tugmani bosib ushlab o'chirmang. Saqlanmagan ish yo'qoladi, disk buzilishi mumkin.</div>`},
+ {b:'hand',t:"Sichqoncha bilan ishlash",x:ul(["<b>1 marta chap</b>: belgini tanlash","<b>2 marta chap</b>: faylni yoki dasturni ochish","<b>O'ng tugma</b>: qo'shimcha menyu","<b>Bosib ushlab sudrash</b>: fayl yoki oynani ko'chirish","<b>G'ildirak</b>: sahifani yuqori-pastga aylantirish"]),d:D.mouse(),
+  n:"Mashq: ish stolidagi belgilarni sudrab bir qatorga tizish. Ikki marta bosish ko'pchilikka qiyin, shoshirmang."},
+ {b:'hand',t:"Klaviatura xaritasi",full:1,x:`<p>Har bir rang o'z vazifasiga ega. O'zbek harflari: <kbd>o</kbd> + <kbd>'</kbd> = o', <kbd>g</kbd> + <kbd>'</kbd> = g'. Til almashtirish: <kbd>Win</kbd>+<kbd>Probel</kbd> yoki <kbd>Alt</kbd>+<kbd>Shift</kbd>.</p>`,d:D.keyboard()},
+ {b:'hand',t:"Windows ish stoli",x:ol(["<b>Ish stoli</b>: asosiy ekran","<b>Belgilar</b>: fayl, papka, dastur yorliqlari","<b>Oyna</b>: ochiq dastur","<b>Vazifalar paneli</b>: ochiq dasturlar pastda","<b>Start</b>: hamma dasturlar va qidiruv","<b>Til va soat</b>: UZ, EN, RU shu yerda almashadi"]),d:D.desktop()},
+ {b:'hand',t:"Oynalar bilan ishlash",x:keys([["Alt+Tab","Oynalar orasida almashish"],["Win+←","Oynani chap yarmiga"],["Win+→","Oynani o'ng yarmiga"],["Win+D","Ish stolini ko'rsatish"],["Win+I","Sozlamalar (fon, tovush, Wi-Fi)"]]),d:D.winctl()},
+ {b:'hand',t:"Birinchi fayl: Bloknotda yozamiz",full:1,x:flow([{t:"Start",d:"“Bloknot” deb yozing"},{t:"Matn yozing",d:"o'zingiz haqingizda 3 gap"},{t:"Ctrl + S",d:"saqlash oynasi",c:'c-or'},{t:"Joyni tanlang",d:"Ish stoli"},{t:"Nom bering",d:"Ism_birinchi.txt",c:'c-gr'}]),
+  d:`<p class="lead">Xuddi shu yo'l bilan Kalkulyator va Paint dasturlarini ham Start orqali toping.</p>`},
+ {b:'ai',t:"AI ga birinchi qarash",full:1,x:`<p>Sun'iy intellekt (AI) ko'p narsani biladi, lekin kompyuteringizni siz boshqarasiz.</p>`,
+  d:cmp({c:'good',h:"AI qila oladi",i:["Matn yozish va tushuntirish","Savolga javob berish","Tarjima qilish","Rasm chizish"]},{c:'bad',h:"AI qila olmaydi",i:["Kompyuteringizni yoqish","Faylingizni saqlash va topish","Papkalaringizni tartiblash","Siz uchun tekshirish va javob berish"]}),
+  n:"ChatGPT ga “Kompyuter nima? 10 yoshli bolaga 3 gapda tushuntir” deb yozib, ekranda ko'rsating. AI bilan to'liq ishlash 4–5-darslarda."},
+ {b:'quiz',q:"Kompyuterni o'chirsak, qaysi xotiradagi narsa yo'qoladi?",o:["Disk","Operativ xotira (RAM)","Fleshka"],a:1,w:"RAM faqat kompyuter yoniqligida ishlaydi. Shuning uchun ishni diskka saqlash kerak (Ctrl + S)."},
+ {b:'quiz',q:"Ochiq oynalar orasida tez almashish uchun qaysi tugmalar?",o:["Ctrl + C","Alt + Tab","Win + L"],a:1,w:"Alt ni ushlab turib Tab ni bosing. Win + L esa kompyuterni qulflaydi."},
+ {b:'task',t:"Amaliyot: Windows topshiriqlari",x:ol(["Bloknot va Kalkulyatorni Start orqali oching","Ikkalasini Win + ← va Win + → bilan yonma-yon qo'ying","Tilni o'zbekchaga almashtiring","Bloknotga o'zingiz haqingizda 3 gap yozing","Ism_birinchi.txt nomi bilan ish stoliga saqlang","keybr.com saytida 5 daqiqa yozing va tezligingizni daftarga yozing"]),
+  n:"Boshlang'ich yozish tezligini (so'z/daqiqa) jurnalga yozing: 12-darsda solishtiriladi va baholashning 10% ini tashkil qiladi."},
+ {b:'home',t:"Uy vazifasi",x:ul(["Har kuni 10 daqiqa yozish mashqi (keybr.com yoki monkeytype.com)","Uydagi kompyuterda ish stoli fonini o'zgartiring (Win + I → Shaxsiylashtirish)","Kompyuter qismlarini oilangizga tushuntirib bering"])}
+ ]},
+/* ---------------- 2 ---------------- */
+{t:"Fayl va papkalar: tartib tizimi",goal:"Fayllarni to'g'ri nomlash, papkalarga joylash va kerakli faylni tez topish.",
+ tags:["Explorer","Nomlash","Nusxa va ko'chirish"],
+ today:["Fayl va papka","Explorer","Kengaytmalar","Nomlash","Nusxa olish","Savat"],
+ s:[
+ {b:'hand',t:"Fayl va papka nima?",x:ul(["<b>Fayl</b>: bitta ish (matn, rasm, qo'shiq, video)","<b>Papka</b>: fayllar uchun quti, xuddi jild kabi","Papka ichida yana papka bo'lishi mumkin","Har faylning manzili bor:<br><code style=\"font-family:var(--f-mono);font-size:.85em\">D:\\Codial_Ali\\02_Fayllar\\vazifa.docx</code>"]),
+  d:D.tree([[0,'D: disk','d'],[1,'Codial_Ali','d'],[2,'01_Windows','d'],[3,'Ali_birinchi.txt','f'],[2,'02_Fayllar','d'],[3,'vazifa.docx','f',1],[2,'03_Internet','d']],'Papkalar daraxti')},
+ {b:'hand',t:"Explorer (Provodnik)",x:`<p>Ochish: <kbd>Win</kbd>+<kbd>E</kbd></p>`+ol(["<b>Manzil satri</b>: hozir qaysi papkadasiz","<b>Chap panel</b>: Ish stoli, Yuklamalar, disklar","<b>Fayllar</b>: papka ichidagilar","<b>Qidiruv</b>: fayl nomini yozib toping"]),d:D.explorer()},
+ {b:'hand',t:"Fayl turlari (kengaytma)",x:ul(["Kengaytma: nuqtadan keyingi qism, masalan <b>.docx</b>","Ko'rsatish: Explorer → Ko'rinish → <b>Fayl kengaytmalari</b> ✓","Kengaytmani o'zgartirmang: fayl ochilmay qoladi","<b>.exe</b> faylni notanish joydan ochmang: virus bo'lishi mumkin"]),d:D.ext()},
+ {b:'hand',t:"Yaxshi nom, yomon nom",x:`<p>Qoida: <b>Sana_Ism_Mavzu</b>. Bo'sh joy o'rniga pastki chiziq _ ishlating.</p><p class="lead">Nomda bu belgilar bo'lmaydi: \\ / : * ? " &lt; &gt; |</p>`,
+  d:cmp({c:'bad',h:"Yomon",i:["Yangi papka (3)","document1.docx","oxirgi_oxirgi2.docx","rasm.jpg"]},{c:'good',h:"Yaxshi",i:["01_Windows","2026-10-20_Ali_Referat.docx","Ali_Baholar_7-sinf.xlsx","Ali_Sport_taqdimot.pptx"]})},
+ {b:'hand',t:"Nusxa olish va ko'chirish",x:keys([["Ctrl+C","Nusxa olish"],["Ctrl+X","Kesib olish"],["Ctrl+V","Qo'yish"],["F2","Qayta nomlash"],["Ctrl+Shift+N","Yangi papka"],["Ctrl+Z","Bekor qilish"]]),d:D.copyMove()},
+ {b:'hand',t:"O'chirish va Savat",full:1,x:flow([{t:"Delete",d:"faylni tanlab bosing"},{t:"Savat",d:"fayl hali bor",c:'c-or'},{t:"Tiklash",d:"o'ng tugma → Tiklash",c:'c-gr'}]),
+  d:`<div class="warn"><b>Ehtiyot:</b> <kbd>Shift</kbd>+<kbd>Delete</kbd> faylni Savatsiz, butunlay o'chiradi. Savatni tozalagandan keyin ham fayl qaytmaydi.</div>`},
+ {b:'hand',t:"Qidirish va saralash",x:ul(["Explorer qidiruvi: fayl nomining bir qismini yozing","<b>*.docx</b> deb yozsangiz, barcha Word fayllar chiqadi","Saralash: nomi, sanasi, hajmi bo'yicha (ustun nomini bosing)","Ko'rinish: katta belgilar yoki jadval"]),
+  d:keys([["Win+S","Kompyuter bo'yicha qidiruv"],["Ctrl+F","Papka ichida qidiruv"],["Alt+↑","Bir papka yuqoriga"]])},
+ {b:'ai',t:"AI reja beradi, siz bajarasiz",full:1,x:prompt("Men 7-sinf o'quvchisiman. Maktab va kurs fayllarim uchun oddiy papka tuzilmasini taklif qil. Ko'pi bilan 6 ta papka, nomlari o'zbekcha va raqam bilan boshlansin."),
+  d:`<p>AI ro'yxat beradi. Lekin papkalarni <b>Explorerda o'zingiz yaratasiz</b>: AI kompyuteringiz ichiga kira olmaydi.</p>`,n:"Bir nechta o'quvchining AI javobini solishtiring: hamma har xil javob oladi. Bu AI ning odatiy xususiyati ekanini tushuntiring."},
+ {b:'quiz',q:"Qaysi fayl nomi eng to'g'ri?",o:["yangi document (2).docx","2026-10-20_Ali_Referat.docx","referat/oxirgi?.docx"],a:1,w:"Sana, ism va mavzu bor, taqiqlangan belgilar yo'q. Uchinchi nomda / va ? bor: Windows bunday nomni qabul qilmaydi."},
+ {b:'quiz',q:"Shift + Delete nima qiladi?",o:["Faylni Savatga tashlaydi","Faylni butunlay o'chiradi","Faylning nusxasini oladi"],a:1,w:"Shift + Delete Savatni chetlab o'tadi. Faqat ishonchingiz komil bo'lsa ishlating."},
+ {b:'task',t:"Amaliyot: tartibsiz papka (10 daqiqa)",x:ol(["O'qituvchi bergan “Tartibsiz” papkasini oching (50 ta aralash fayl)","Rasmlar, Hujjatlar, Jadvallar, Arxivlar papkalarini yarating","Fayllarni turiga qarab ko'chiring (kengaytmaga qarang)","3 ta yomon nomli faylni qoidaga ko'ra qayta nomlang","Savatdan “muhim.docx” faylini tiklang","D: diskda <b>Codial_Ism</b> papkasini yarating: kurs davomidagi hamma ish shu yerda bo'ladi"]),
+  n:"Har dars oxirida Codial_Ism papkasini tekshiring: tartib baholashning 20% ini tashkil qiladi."},
+ {b:'home',t:"Uy vazifasi",x:ul(["Uydagi kompyuter yoki telefonda Yuklamalar (Downloads) papkasini tartiblang","Kerakmas fayllarni o'chiring, keraklilarini papkalarga ajrating","Oldin va keyin skrinshot olib keling (3-darsda o'rganamiz, hozircha telefonda suratga oling)"])}
+ ]},
+/* ---------------- 3 ---------------- */
+{t:"Tezkor tugmalar, dasturlar va fleshka",goal:"Kompyuterda tez ishlash, dastur o'rnatish, fleshka va arxiv bilan ishlash.",
+ tags:["Tezkor tugmalar","Fleshka","Zip arxiv"],
+ today:["12 ta tugma","Skrinshot","Dastur o'rnatish","Fleshka","Arxiv","Chop etish"],
+ s:[
+ {b:'hand',t:"Eng kerakli 12 ta tugma",full:1,x:keys([["Ctrl+C","Nusxa olish"],["Ctrl+V","Qo'yish"],["Ctrl+X","Kesish"],["Ctrl+Z","Bekor qilish"],["Ctrl+S","Saqlash"],["Ctrl+A","Hammasini belgilash"],["Ctrl+F","Qidirish"],["Alt+Tab","Oyna almashish"],["Win+E","Explorer"],["Win+D","Ish stoli"],["Win+Shift+S","Ekran rasmi"],["Win+V","Bufer tarixi"]]),
+  n:"Har bir tugmani bir martadan birga bajaring. Keyin darsning oxiridagi musobaqada so'raladi."},
+ {b:'hand',t:"Ekran rasmi (skrinshot)",full:1,x:flow([{t:"Win + Shift + S",c:'c-bl'},{t:"Sohani belgilang",d:"sichqoncha bilan torting"},{t:"Ctrl + V",d:"Word, Telegram yoki Paint ga qo'ying",c:'c-gr'}]),
+  d:`<p class="lead">Yoki ekran burchagida chiqqan xabarni bosib, rasmni fayl qilib saqlang. Butun ekran: <kbd>PrtSc</kbd>.</p>`},
+ {b:'hand',t:"Dastur o'rnatish: xavfsiz yo'l",full:1,x:cmp({c:'good',h:"To'g'ri",i:["Rasmiy sayt: google.com/chrome, microsoft.com","Microsoft Store","O'qituvchi yoki ota-ona ruxsati bilan"]},{c:'bad',h:"Xavfli",i:["“Bepul yuklab ol, crack, keygen” saytlari","Reklamadagi katta “Download” tugmalari","Telegramdan kelgan notanish .exe fayl"]}),
+  d:`<p>O'chirish: <kbd>Win</kbd>+<kbd>I</kbd> → Ilovalar → dasturni tanlang → O'chirish.</p>`},
+ {b:'hand',t:"Fleshka bilan ishlash",full:1,x:flow([{t:"1. Ulang",d:"USB uyasiga"},{t:"2. Oching",d:"Explorer → USB disk"},{t:"3. Nusxa oling",d:"Ctrl + C → Ctrl + V",c:'c-bl'},{t:"4. Xavfsiz chiqaring",d:"vazifalar panelidagi belgi",c:'c-or'},{t:"5. Sug'uring",c:'c-gr'}]),
+  d:`<div class="warn"><b>Diqqat:</b> nusxa olish tugamaguncha fleshkani sug'urmang, aks holda fayl buziladi.</div>`},
+ {b:'hand',t:"Arxiv (zip)",x:ul(["Ko'p faylni <b>bitta faylga</b> yig'adi: yuborish oson","Hajm ko'pincha kichrayadi","Siqish: fayllarni belgilang → o'ng tugma → <b>ZIP ga siqish</b>","Ochish: o'ng tugma → <b>Hammasini chiqarish</b>"]),
+  d:flow([{t:"12 ta fayl",d:"rasm, hujjat, jadval"},{t:"O'ng tugma → ZIP",c:'c-or'},{t:"Codial_Ali.zip",d:"bitta fayl",c:'c-gr'}])},
+ {b:'hand',t:"Chop etish",x:keys([["Ctrl+P","Chop etish oynasi"]])+ul(["Printerni tanlang","Nusxalar soni","Sahifalar: masalan 1-3","Rangli yoki oq-qora","Avval ko'rib chiqing, keyin bosing"]),
+  d:`<p class="lead">Qog'ozni tejang: chop etishdan oldin ekranda tekshiring. Ko'p hollarda PDF qilib yuborish kifoya.</p>`},
+ {b:'ai',t:"Muammoni AI ga to'g'ri tushuntirish",full:1,x:prompt("fleshka ishlamayapti","Yomon prompt","bad")+`<div style="height:.5em"></div>`+prompt("Windows 11. Fleshkani ulaganimda ovoz chiqadi, lekin Explorerda ko'rinmaydi. Qadamma-qadam, oddiy tilda nima qilay? Skrinshot ilova qildim.","Yaxshi prompt","ans"),
+  d:`<p>AI qadamlarni aytadi, <b>bajarish sizning qo'lingizda</b>. Har qadamdan keyin natijani tekshiring.</p>`},
+ {b:'quiz',q:"Fleshkani sug'urishdan oldin nima qilish kerak?",o:["Kompyuterni o'chirish","“Xavfsiz chiqarish” ni bosish","Hech narsa"],a:1,w:"Xavfsiz chiqarish yozish jarayoni tugaganini tekshiradi. Shunda fayllar buzilmaydi."},
+ {b:'task',t:"Amaliyot: musobaqa va fleshka",x:ol(["Tezkor tugmalar musobaqasi: o'qituvchi aytadi, birinchi bajargan ball oladi (15 savol)","Codial_Ism papkangizni ZIP qiling","ZIP faylni fleshkaga ko'chiring","Fleshkani xavfsiz chiqaring","Win + Shift + S bilan ish stolingiz skrinshotini olib, Paint ga qo'ying va saqlang"])},
+ {b:'home',t:"Uy vazifasi",x:ul(["AI dan Windows tezkor tugmalari ro'yxatini so'rang","Eng kerakli 15 tasini tanlab, Bloknotda o'zingiz tartiblang: Tugmalar_Ism.txt","Uyda har kuni kamida 3 tasini ishlating"])}
+ ]},
+/* ---------------- 4 ---------------- */
+{t:"Internet, qidiruv va akkauntlar",goal:"Brauzerda ishlash, aniq qidirish, manbani tekshirish, Gmail va AI ga kirish.",
+ tags:["Brauzer","Google qidiruv","Gmail va AI"],
+ today:["Brauzer","Yuklamalar","Aniq qidiruv","Manba","Gmail","Google va AI"],
+ s:[
+ {b:'hand',t:"Brauzer qismlari",x:ol(["<b>Tablar</b>: bir nechta sayt bir vaqtda","<b>Orqaga va yangilash</b>","<b>Manzil satri</b>: sayt manzili yoki qidiruv","<b>Xatcho'p</b>: saytni saqlab qo'yish","<b>Yuklamalar</b>: yuklab olingan fayllar"])+keys([["Ctrl+T","Yangi tab"],["Ctrl+W","Tabni yopish"],["Ctrl+D","Xatcho'p"]]),d:D.browser()},
+ {b:'hand',t:"Yuklangan fayl qayerda?",x:ul(["Odatda <b>Yuklamalar (Downloads)</b> papkasida","<kbd>Ctrl</kbd>+<kbd>J</kbd>: yuklamalar ro'yxati","Yuklagach darhol kerakli papkaga ko'chiring (2-dars qoidasi)"]),
+  d:flow([{t:"Saytdan yuklash"},{t:"Yuklamalar papkasi",c:'c-or'},{t:"Codial_Ism ga ko'chirish",c:'c-gr'}])},
+ {b:'hand',t:"Google'da aniq qidirish",full:1,x:`<div class="tblwrap"><table class="tbl"><tr><th>Yozing</th><th>Nima qiladi</th><th>Misol</th></tr>
+  <tr><td><code>"..."</code></td><td>Aynan shu iborani qidiradi</td><td><code>"Amir Temur maqbarasi"</code></td></tr>
+  <tr><td><code>site:</code></td><td>Faqat bitta sayt yoki domen</td><td><code>maktab site:uz</code></td></tr>
+  <tr><td><code>filetype:</code></td><td>Faqat shu turdagi fayl</td><td><code>fizika testlar filetype:pdf</code></td></tr>
+  <tr><td><code>-</code></td><td>So'zni chiqarib tashlaydi</td><td><code>yaguar -mashina</code></td></tr></table></div>`},
+ {b:'hand',t:"Ishonchli manbani ajratish",x:`<ul class="checks"><li>Kim yozgan? Muallif yoki tashkilot bormi?</li><li>Qachon yozilgan? Sana bormi?</li><li>Rasmiy saytmi? (gov.uz, edu.uz, uz.wikipedia.org)</li><li>Boshqa saytda ham xuddi shunday yozilganmi?</li></ul>`,
+  d:`<div class="warn"><b>Eslab qoling:</b> internetdagi hamma narsa ham to'g'ri emas. Kamida 2 ta manbada tekshiring.</div>`},
+ {b:'hand',t:"Gmail: xat yuborish",x:ol(["<b>Kimga</b>: manzilni xatosiz yozing","<b>Mavzu</b>: har doim yozing","<b>Matn</b>: salom, qisqa mazmun, ism","<b>Biriktirish</b>: faylni qo'shing","<b>Yuborish</b>"]),d:D.email()},
+ {b:'ai',t:"Google va AI: qachon qaysi?",full:1,x:cmp({c:'blue',h:"Google",i:["Saytlar ro'yxatini beradi","Manbani o'zingiz tanlaysiz","Yangilik, narx, raqam, rasmiy ma'lumot uchun"]},{c:'orange',h:"AI (ChatGPT, Gemini)",i:["Tayyor tushuntirish beradi","Tez, lekin xato qilishi mumkin","G'oya, reja, tushuntirish, matn uchun"]})},
+ {b:'ai',t:"AI bilan birinchi suhbat",x:ol(["<b>chatgpt.com</b> yoki <b>gemini.google.com</b> ni oching","Google akkaunt bilan kiring","“Yangi suhbat” ni bosing","Savolingizni yozing","Javobni o'qing va davom ettiring: “soddaroq tushuntir”"]),
+  d:`<div class="warn"><b>Yosh chegarasi:</b> ko'p AI xizmatlari 13 yoshdan, ota-ona ruxsati bilan. 13 yoshgacha bo'lganlar o'qituvchi akkaunti orqali guruh bilan ishlaydi.</div>`},
+ {b:'quiz',q:"Faqat PDF fayllarni topish uchun nima qo'shamiz?",o:["site:pdf","filetype:pdf","\"pdf\""],a:1,w:"filetype: buyrug'i fayl turini tanlaydi. site: esa saytni tanlaydi."},
+ {b:'task',t:"Amaliyot: bir savol, ikki yo'l",x:ol(["Savol: “O'zbekistonda nechta viloyat bor va maydoni eng kattasi qaysi?”","Google'dan javob toping, manba saytini yozib oling","Xuddi shu savolni AI ga bering","Javoblarni solishtiring: farq bormi?","Javob va manbani Bloknotga yozib, Codial_Ism/04_Internet ga saqlang"]),
+  n:"To'g'ri javob: 12 ta viloyat, Qoraqalpog'iston Respublikasi va Toshkent shahri; viloyatlar orasida eng kattasi Navoiy viloyati. AI ba'zan Respublikani “viloyat” deb hisoblaydi: shu farqni muhokama qiling."},
+ {b:'home',t:"Uy vazifasi",x:ul(["O'qituvchiga Gmail orqali xat yuboring: mavzu, salom, Ism_birinchi.txt biriktirilgan","Brauzerda 3 ta foydali saytni xatcho'pga qo'shing"])}
+ ]},
+/* ---------------- 5 ---------------- */
+{t:"Prompt yozish va AI javobini tekshirish",goal:"AI ga aniq topshiriq berish, javobni yaxshilash va xatolarini topish.",
+ tags:["R-V-K-F formulasi","AI xatolari","Xavfsizlik"],
+ today:["Prompt nima","R-V-K-F","Suhbatni davom ettirish","AI xatolari","Tekshirish","Nimani bermaymiz"],
+ s:[
+ {b:'ai',t:"Prompt nima?",full:1,x:`<p>Prompt: AI ga beriladigan topshiriq. <b>Aniq topshiriq = yaxshi javob.</b></p>`,d:cmp({c:'bad',h:"Noaniq",i:["Referat yoz","Matematika","Menga yordam ber"]},{c:'good',h:"Aniq",i:["7-sinf uchun suv aylanishi haqida 1 sahifali referat rejasi","Kasrlarni qo'shishni 3 ta misol bilan tushuntir","Ingliz tilidan 20 ta so'zni 5 kunda yodlash rejasi"]})},
+ {b:'ai',t:"Formula: R-V-K-F",x:`<p>Har bir yaxshi prompt to'rt qismdan iborat.</p>`+prompt("Sen 7-sinf biologiya o'qituvchisisan. Fotosintezni tushuntir. 12 yoshli o'quvchi uchun, maktab darsiga. 5 ta qisqa gap va 1 ta misol bilan."),
+  d:`<div class="rvkf">
+   <div style="background:var(--blue)"><span class="L">R</span><b>Rol</b><em>Sen 7-sinf biologiya o'qituvchisisan</em></div>
+   <div style="background:var(--orange)"><span class="L">V</span><b>Vazifa</b><em>Fotosintezni tushuntir</em></div>
+   <div style="background:var(--green)"><span class="L">K</span><b>Kontekst</b><em>12 yoshli o'quvchi uchun, darsga</em></div>
+   <div style="background:var(--red)"><span class="L">F</span><b>Format</b><em>5 ta qisqa gap + 1 misol</em></div></div>`},
+ {b:'ai',t:"Birinchi javob: faqat qoralama",x:`<p>Suhbatni davom ettirib, javobni yaxshilang:</p>`,d:`<div class="stack">${["Soddaroq tushuntir","Jadval qilib ber","O'zbek lotin alifbosida yoz","Yana 3 ta misol qo'sh","50 so'zga qisqartir"].map(x=>`<div style="background:var(--soft)"><span style="font-family:var(--f-mono);font-size:.9em">${x}</span></div>`).join('')}</div>`},
+ {b:'ai',t:"AI ham xato qiladi",x:ul(["AI ishonch bilan <b>noto'g'ri</b> fakt, sana, ism aytishi mumkin","Bunga <b>gallyutsinatsiya</b> deyiladi","Ayniqsa raqam, sana, kitob nomi va manbalarda ko'p uchraydi"]),
+  d:prompt("Alisher Navoiy qachon tug'ilgan?","Savol")+`<div style="height:.5em"></div>`+prompt(`Alisher Navoiy <span class="flag">1520-yilda</span> Samarqandda tug'ilgan.`,"AI javobi (xato)","bad")+`<p class="lead" style="margin-top:.5em">To'g'risi: 1441-yil, Hirot shahri.</p>`,
+  n:"Bu misolni ekranda haqiqiy AI ga so'rab ko'rsatish shart emas: zamonaviy AI bunga to'g'ri javob berishi mumkin. Maqsad tekshirish odatini shakllantirish."},
+ {b:'ai',t:"Javobni qanday tekshiramiz?",full:1,x:flow([{t:"AI javobi",c:'c-bl'},{t:"2 ta manbada tekshiring",d:"Google, darslik, rasmiy sayt"},{t:"Mos keldimi?"},{t:"Ha: ishlating",c:'c-gr'},{t:"Yo'q: qayta so'rang yoki manbaga ishoning",c:'c-rd'}])},
+ {b:'ai',t:"AI ga nimani bermaymiz",x:`<p>AI bilan suhbat internetga yuboriladi. Shaxsiy ma'lumotni yozmang.</p>`,
+  d:cmp({c:'bad',h:"Hech qachon",i:["Parollar va SMS kodlar","Pasport yoki ID raqami","Bank karta raqami","Uy manzili va telefon","Boshqalarning rasmi va sirlari"]},{c:'good',h:"Mumkin",i:["Dars mavzusi","Umumiy savollar","O'zingiz yozgan matn","Shaxsiy ma'lumotsiz jadval"]})},
+ {b:'quiz',q:"Qaysi prompt yaxshiroq?",o:["Matematika","Kasrlarni qo'shishni 6-sinf o'quvchisiga 3 ta misol bilan tushuntir","Menga yordam ber"],a:1,w:"Ikkinchi promptda vazifa, kontekst (6-sinf) va format (3 ta misol) bor."},
+ {b:'quiz',q:"AI aytgan sanaga qanday ishonch hosil qilamiz?",o:["AI dan yana bir marta so'raymiz","2 ta ishonchli manbada tekshiramiz","Ishonamiz, AI aqlli"],a:1,w:"AI o'z xatosini takrorlashi mumkin. Mustaqil manba kerak."},
+ {b:'task',t:"Amaliyot: 5 ta prompt",x:ol(["R-V-K-F bo'yicha 5 ta prompt yozing: dars mavzusi, tug'ilgan kun tabrigi, so'z yodlash rejasi, sport mashqi, kitob tavsiyasi","Juftlikda bir-biringiz promptini 1–4 ball bilan baholang (har harf 1 ball)","O'qituvchi bergan AI javobidagi 2 ta xatoni toping va manbasini ko'rsating"]),
+  n:"Xato javob uchun oldindan 2 ta noto'g'ri fakt qo'shilgan matn tayyorlang (masalan, sana va shahar nomi)."},
+ {b:'home',t:"Uy vazifasi",x:ul(["“Mening 10 ta promptim.txt” faylini tuzing: o'qish, sport, hobbi uchun foydali promptlar","Faylni Codial_Ism/05_AI papkasiga saqlang"])}
+ ]},
+/* ---------------- 6 ---------------- */
+{t:"Word: hujjatni qo'lda formatlash",goal:"Hujjatni talabga mos, chiroyli va chop etishga tayyor qilish.",
+ tags:["Stillar","Jadval va rasm","PDF"],
+ today:["Sahifa tuzilishi","Formatlash","Stillar","Jadval va rasm","Saqlash va PDF"],
+ s:[
+ {b:'hand',t:"Hujjat sahifasi tuzilishi",x:ol(["<b>Chegaralar (maydon)</b>","<b>Sarlavha 1</b>: asosiy sarlavha","<b>Sarlavha 2</b>: bo'lim nomi","<b>Oddiy matn</b>","<b>Jadval</b>","<b>Rasm</b>","<b>Sahifa raqami</b>"]),d:D.page()},
+ {b:'hand',t:"Formatlash tugmalari",full:1,x:keys([["Ctrl+B","Qalin"],["Ctrl+I","Kursiv"],["Ctrl+U","Tagiga chiziq"],["Ctrl+E","Markazga"],["Ctrl+L","Chapga"],["Ctrl+J","Ikki tomonga tekislash"],["Ctrl+Enter","Yangi sahifa"],["Ctrl+Z","Bekor qilish"]])},
+ {b:'hand',t:"Stillar: sehrli tugma",x:ul(["Sarlavhani qo'lda kattalashtirmang: <b>“Sarlavha 1”</b> stilini bosing","Stillar bo'lsa, mundarija o'zi yasaladi (7-dars)","Butun hujjat bir xil ko'rinadi"]),
+  d:`<div class="tblwrap"><table class="tbl"><tr><th colspan="2">Referat uchun ko'p uchraydigan talab</th></tr>
+  <tr><td>Shrift</td><td>Times New Roman, 14</td></tr><tr><td>Qator oralig'i</td><td>1,5</td></tr>
+  <tr><td>Chegaralar</td><td>chap 3 sm, o'ng 1,5 sm, yuqori va past 2 sm</td></tr><tr><td>Tekislash</td><td>ikki tomonga</td></tr></table></div><p class="lead" style="margin-top:.4em">Maktabingiz talabi boshqacha bo'lsa, o'shani bajaring.</p>`},
+ {b:'hand',t:"Jadval va rasm",x:ul(["Qo'shish → <b>Jadval</b>: qator va ustun sonini tanlang","Qo'shish → <b>Rasm</b>: kompyuterdan","Rasmni o'rash: <b>“Matn bilan kvadrat”</b>","Rasmni burchagidan torting: proportsiya buzilmaydi"]),
+  d:`<div class="warn"><b>Xato:</b> rasmni yon tomonidan tortsangiz, u cho'ziladi va xunuk ko'rinadi.</div>`},
+ {b:'hand',t:"Saqlash va PDF",full:1,x:flow([{t:"Ctrl + S",d:".docx: tahrirlash uchun",c:'c-bl'},{t:"Fayl → Saqlash",d:"turi: PDF"},{t:".pdf",d:"yuborish va chop etish uchun",c:'c-rd'},{t:"Codial_Ism/06_Word",c:'c-gr'}]),
+  d:`<p class="lead">PDF hamma kompyuter va telefonda bir xil ko'rinadi, shuning uchun yuborishga qulay.</p>`},
+ {b:'hand',t:"Nega bu darsda AI yo'q?",full:1,x:`<p style="font-size:1.25em">AI matn yoza oladi. Lekin hujjatni <b>talabga mos, chiroyli va chop etishga tayyor</b> qilish sizning qo'lingizda.</p>`,
+  d:cmp({c:'blue',h:"AI beradi",i:["Matn","Reja","G'oyalar"]},{c:'orange',h:"Siz qilasiz",i:["Stillar va formatlash","Jadval va rasm joylash","PDF qilish va to'g'ri papkaga saqlash"]})},
+ {b:'quiz',q:"Mundarija avtomatik chiqishi uchun sarlavhaga nima qilish kerak?",o:["Qalin qilish","“Sarlavha 1” stilini berish","Shriftni kattalashtirish"],a:1,w:"Word mundarijani faqat stillar orqali taniydi."},
+ {b:'task',t:"Amaliyot: xom matndan ariza",x:ol(["O'qituvchi bergan xom matnni oching","Ariza ko'rinishiga keltiring: kimga (o'ngda), sarlavha (markazda), matn (ikki tomonga)","Sana va imzo joyi","Ikkinchi topshiriq: rasmli e'lon (sarlavha, rasm, jadval)","Ikkalasini .docx va .pdf qilib Codial_Ism/06_Word ga saqlang"])},
+ {b:'home',t:"Uy vazifasi",x:ul(["Oilangiz uchun bir sahifali bayram tabriknomasi: sarlavha, rasm, ramka","PDF qilib oilangizga Telegramda yuboring"])}
+ ]},
+/* ---------------- 7 ---------------- */
+{t:"Word + AI: referat va rezyume",goal:"AI qoralamasidan halol, tekshirilgan va to'g'ri formatlangan referat yasash.",
+ tags:["AI qoralama","Avto-mundarija","Halollik"],
+ today:["Ish tartibi","Referat prompti","Word ga ko'chirish","Mundarija","Halollik"],
+ s:[
+ {b:'ai',t:"Ish tartibi",full:1,x:flow([{t:"AI qoralama",d:"reja va matn",c:'c-bl'},{t:"Siz tekshirasiz",d:"faktlar, sanalar"},{t:"Siz formatlaysiz",d:"stillar, rasm",c:'c-or'},{t:"Mundarija",d:"avtomatik"},{t:"PDF → papka",c:'c-gr'}]),
+  d:`<p>Ishning yarmini AI qiladi, qolgan yarmi sizniki. Baho ham shu yarim uchun qo'yiladi.</p>`},
+ {b:'ai',t:"Referat uchun prompt",full:1,x:prompt("Sen 8-sinf tarix o'qituvchisisan. “Amir Temur davrida ilm-fan” mavzusida referat rejasini tuz: kirish, 3 bob, xulosa. Har bobga 3 ta asosiy fikr. O'zbek lotin alifbosida.")+`<div style="height:.5em"></div>`+prompt("Endi 1-bobni 250 so'zda yoz. 13 yoshli o'quvchi tiliga mos bo'lsin.","Keyingi prompt"),
+  d:`<p class="lead">Bir yo'la butun referatni so'ramang: bob-bob yozdirsangiz, sifat yaxshiroq bo'ladi.</p>`},
+ {b:'hand',t:"AI matnini Word ga to'g'ri ko'chirish",x:ul(["<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> yoki “Faqat matnni saqlash”","Ortiqcha ** va # belgilarni o'chiring","Sarlavhalarga stil bering","Imlo tekshiruvi: qizil chiziqlarni ko'rib chiqing"]),
+  d:cmp({c:'bad',h:"Ko'chirilgandek",i:["**Kirish**","## 1-bob","Har xil shrift va fon"]},{c:'good',h:"Tozalangan",i:["Kirish (Sarlavha 1)","1-bob (Sarlavha 1)","Bir xil Times New Roman 14"]})},
+ {b:'hand',t:"Avtomatik mundarija",full:1,x:flow([{t:"Sarlavhalarga stil",c:'c-bl'},{t:"Havolalar"},{t:"Mundarija → Avtomatik"},{t:"O'zgarsa: Jadvalni yangilash",c:'c-gr'}]),
+  d:`<p class="lead">Sahifa raqamlari mundarijada o'zi chiqadi. Qo'lda raqam yozmang.</p>`},
+ {b:'ai',t:"Halollik qoidalari",x:`<ul class="checks"><li>AI matnini o'qing va o'z so'zlaringiz bilan qayta yozing</li><li>Har bir fakt, sana va ismni tekshiring</li><li>O'qituvchiga AI ishlatganingizni ayting</li><li>Manbalar ro'yxatini haqiqiy kitob va saytlardan tuzing</li></ul>`,
+  d:`<div class="warn"><b>Diqqat:</b> AI mavjud bo'lmagan kitob va saytlarni “manba” qilib to'qishi mumkin. Har birini topib tekshiring.</div>`},
+ {b:'ai',t:"Rezyume: AI tuzilma beradi, ma'lumot sizniki",x:prompt("Men 15 yoshdaman, kompyuter savodxonligi kursini tugatyapman. Yozgi amaliyot uchun bir sahifali rezyume tuzilmasini ber: qaysi bo'limlar va har birida nima yozish kerak."),
+  d:ul(["AI <b>tuzilma</b> beradi: bo'limlar va maslahatlar","Ma'lumotni <b>o'zingiz</b> yozasiz: ism, ko'nikma, yutuq","Bilmagan narsangizni hech qachon yozmang"])},
+ {b:'quiz',q:"AI bergan manbalar ro'yxati bilan nima qilamiz?",o:["Shundayligicha ko'chirib qo'yamiz","Har birini topib tekshiramiz","O'chirib tashlaymiz"],a:1,w:"Ba'zi manbalar haqiqiy, ba'zilari to'qilgan bo'lishi mumkin. Topilganini qoldiring."},
+ {b:'task',t:"Amaliyot: referat (2–3 sahifa)",x:ol(["Mavzu tanlang va AI bilan reja tuzing","Bob-bob matn oling, o'z so'zlaringiz bilan tahrirlang","Titul varag'i, avtomatik mundarija, 3 bob, xulosa","Tekshirilgan manbalar ro'yxati va sahifa raqamlari","2026-10-xx_Ism_Referat nomi bilan .docx va .pdf"]),
+  n:"Har o'quvchidan AI javobida topgan kamida bitta xatosini so'rang. Bu yakuniy loyihadagi promptlar.txt uchun ham kerak bo'ladi."},
+ {b:'home',t:"Uy vazifasi",x:ul(["Referatni tugating","PDF nusxasini Gmail orqali o'qituvchiga yuboring (mavzu va salom bilan)"])}
+ ]},
+/* ---------------- 8 ---------------- */
+{t:"Excel: jadval asoslari",goal:"Jadval tuzish, ma'lumot kiritish va oddiy formulalar bilan hisoblash.",
+ tags:["Kataklar","SUM va AVERAGE","Saralash"],
+ today:["Katak va manzil","Ma'lumot kiritish","Formulalar","Saralash va filtr"],
+ s:[
+ {b:'hand',t:"Excel oynasi",x:ul(["<b>Ustun</b>: harf (A, B, C)","<b>Qator</b>: raqam (1, 2, 3)","<b>Katak manzili</b>: ustun + qator, masalan <b>B6</b>","<b>Formula satri</b> (fx): katak ichidagi formula","<b>Varaqlar</b>: pastda, kitob sahifalari kabi"]),d:D.excel()},
+ {b:'hand',t:"Ma'lumot kiritish",x:ul(["<kbd>Enter</kbd>: pastga, <kbd>Tab</kbd>: o'ngga","<b>Avtoto'ldirish</b>: katak burchagidagi kvadratni torting (1, 2, 3 yoki Dushanba, Seshanba...)","Ustun kengligi: chegarani ikki marta bosing","Format: son, sana, pul (so'm)"]),
+  d:`<div class="warn"><b>Odatiy xato:</b> sonni matn bilan birga yozish (“85 ball”). Excel uni hisoblay olmaydi. Faqat 85 deb yozing.</div>`},
+ {b:'hand',t:"Birinchi formulalar",full:1,x:`<p>Formula doim <b>=</b> belgisi bilan boshlanadi.</p><div class="tblwrap"><table class="tbl"><tr><th>Formula</th><th>Nima qiladi</th><th>Rus tilidagi Excelda</th></tr>
+  <tr><td><code>=SUM(B2:B5)</code></td><td>Yig'indi</td><td><code>=СУММ(B2:B5)</code></td></tr>
+  <tr><td><code>=AVERAGE(B2:B5)</code></td><td>O'rtacha</td><td><code>=СРЗНАЧ(B2:B5)</code></td></tr>
+  <tr><td><code>=MAX(B2:B5)</code></td><td>Eng kattasi</td><td><code>=МАКС(B2:B5)</code></td></tr>
+  <tr><td><code>=MIN(B2:B5)</code></td><td>Eng kichigi</td><td><code>=МИН(B2:B5)</code></td></tr>
+  <tr><td><code>=COUNT(B2:B5)</code></td><td>Nechta son bor</td><td><code>=СЧЁТ(B2:B5)</code></td></tr></table></div>`},
+ {b:'hand',t:"Saralash va filtr",x:ul(["Ma'lumotlar → <b>Saralash</b>: A dan Z ga, kattadan kichikka","<b>Filtr</b>: faqat kerakli qatorlarni ko'rsatadi","Ko'rinish → <b>Sohani mahkamlash</b>: sarlavha qatori qotib turadi"]),
+  d:`<p class="lead">Saralashdan oldin butun jadvalni belgilang. Aks holda ismlar bir joyda, ballar boshqa joyda qolib ketadi.</p>`},
+ {b:'quiz',q:"=AVERAGE(B2:B5) nima hisoblaydi?",o:["Yig'indini","O'rtachani","Eng kattasini"],a:1,w:"AVERAGE: o'rtacha qiymat. Yig'indi uchun SUM."},
+ {b:'task',t:"Amaliyot: sinf baholari",x:ol(["8 o'quvchi va 4 fan bo'yicha jadval tuzing","Har o'quvchining o'rtacha bahosi (AVERAGE)","Har fanning o'rtachasi va eng yuqori bahosi (MAX)","O'rtacha baho bo'yicha kattadan kichikka saralang","Chegaralar, sarlavha rangi, sohani mahkamlash","Ali_Baholar.xlsx nomi bilan Codial_Ism/08_Excel ga saqlang"])},
+ {b:'home',t:"Uy vazifasi",x:ul(["Oilaviy haftalik xarajatlar jadvali: kun, nima uchun, summa","Pastida jami summa (SUM) va eng katta xarajat (MAX)"])}
+ ]},
+/* ---------------- 9 ---------------- */
+{t:"Excel + AI: formulalar va diagrammalar",goal:"AI yordamida murakkab formulalarni yozish, tekshirish va diagramma qurish.",
+ tags:["IF va COUNTIF","$ havola","Diagramma"],
+ today:["Formulani so'rash","IF","Foydali formulalar","$ belgisi","Tekshirish","Diagramma"],
+ s:[
+ {b:'ai',t:"AI dan formula so'rash",full:1,x:prompt("Excelda C ustunda ball bor (C2 dan C30 gacha). D ustunga: 60 va undan yuqori bo'lsa “O'tdi”, aks holda “Yiqildi” yozadigan formula ber. Excel rus tilida, ajratuvchi nuqtali vergul.")+`<div style="height:.5em"></div>`+prompt(`=ЕСЛИ(C2&gt;=60; "O'tdi"; "Yiqildi")`,"AI javobi","ans"),
+  d:`<p class="lead">Excel tilini va ajratuvchini (vergul yoki nuqtali vergul) aytsangiz, AI aniqroq javob beradi.</p>`},
+ {b:'ai',t:"IF qanday ishlaydi?",x:ul(["IF: “agar ... bo'lsa”","Shart to'g'ri bo'lsa: birinchi javob","Shart noto'g'ri bo'lsa: ikkinchi javob","Ingliz tilidagi Excelda IF, rus tilida ЕСЛИ"]),d:D.ifd()},
+ {b:'ai',t:"Foydali formulalar",full:1,x:`<div class="tblwrap"><table class="tbl"><tr><th>Formula</th><th>Nima qiladi</th><th>Misol savol AI ga</th></tr>
+  <tr><td><code>COUNTIF</code></td><td>Shartga mos nechta</td><td>Nechta o'quvchi o'tdi?</td></tr>
+  <tr><td><code>SUMIF</code></td><td>Shartga mos yig'indi</td><td>Oziq-ovqatga jami qancha ketdi?</td></tr>
+  <tr><td><code>XLOOKUP</code></td><td>Boshqa jadvaldan topish</td><td>Ism bo'yicha telefon raqamini top</td></tr>
+  <tr><td><code>ROUND</code></td><td>Yaxlitlash</td><td>O'rtachani 1 xonagacha yaxlitla</td></tr></table></div>`},
+ {b:'hand',t:"Nisbiy va mutlaq havola ($)",x:ul(["Formulani pastga tortsangiz: C2 → C3 → C4 (<b>nisbiy</b>)","<b>$F$1</b>: tortganda o'zgarmaydi (<b>mutlaq</b>)","<kbd>F4</kbd> tugmasi $ belgisini o'zi qo'yadi"]),
+  d:prompt("=C2/$F$1","Misol: ball / maksimal ball")+`<p class="lead" style="margin-top:.5em">F1 da maksimal ball (100) turadi. Hamma o'quvchi uchun bir xil katakka bo'linadi.</p>`},
+ {b:'hand',t:"AI formulasini tekshirish",x:`<ul class="checks"><li>2–3 katakni o'zingiz hisoblab solishtiring</li><li>Chegaradagi qiymatni sinang: aynan 60</li><li>Bo'sh katakda nima chiqadi?</li><li><b>#NAME?</b> yoki <b>#VALUE!</b> chiqsa, xatoni AI ga ko'rsating</li></ul>`,
+  d:`<div class="warn"><b>Eslab qoling:</b> AI formulasi ham xato bo'lishi mumkin. Masalan, &gt;= o'rniga &gt; yozsa, aynan 60 ball olgan o'quvchi “Yiqildi” bo'lib qoladi.</div>`},
+ {b:'hand',t:"Diagramma",x:ul(["Ma'lumotni belgilang → Qo'shish → <b>Diagramma</b>","<b>Ustunli</b>: solishtirish","<b>Chiziqli</b>: vaqt bo'yicha o'zgarish","<b>Doiraviy</b>: butunning qismlari","Sarlavha va o'q nomlarini yozing"]),d:D.chart()},
+ {b:'quiz',q:"Formulani pastga tortganda F1 katak o'zgarmasligi uchun nima yozamiz?",o:["F1","$F$1","\"F1\""],a:1,w:"$ belgisi ustun va qatorni qotiradi. F4 tugmasi buni tez qiladi."},
+ {b:'task',t:"Amaliyot: jadvalni aqlli qilamiz",x:ol(["8-dars jadvaliga IF bilan “O'tdi/Yiqildi” ustuni","COUNTIF bilan nechta o'quvchi o'tganini hisoblang","O'rtacha baholar bo'yicha ustunli diagramma","O'qituvchi bergan AI formulasidagi xatoni toping va tuzating"]),
+  n:"Xato formula misoli: =IF(C2>60;...) (aynan 60 ni yiqitadi) yoki diapazon C2:C10 o'rniga C2:C9."},
+ {b:'home',t:"Uy vazifasi",x:ul(["Xarajatlar jadvaliga toifa ustuni qo'shing: oziq-ovqat, transport, boshqa","SUMIF bilan har toifa jami","Doiraviy diagramma"])}
+ ]},
+/* ---------------- 10 ---------------- */
+{t:"Taqdimot va rasm: PowerPoint, Canva, Gamma",goal:"AI qoralamasidan toza, tushunarli taqdimot yasash va uni gapirib berish.",
+ tags:["Dizayn qoidalari","AI qoralama","Chiqish"],
+ today:["Yaxshi slayd","4 qoida","AI qoralama","AI rasm","PowerPoint","Chiqish"],
+ s:[
+ {b:'hand',t:"Yaxshi slayd qanday bo'ladi?",full:1,x:`<p>Tomoshabin slaydni 3 soniyada tushunishi kerak.</p>`,d:D.slides()},
+ {b:'hand',t:"Dizayn qoidalari",x:ol(["<b>1 slayd = 1 fikr</b>","6 qatordan ko'p emas","Katta shrift: matn 28 dan, sarlavha 40 dan","Matn va fon kontrasti: oq fonda qora matn","Animatsiya kam: faqat kerak joyda"]),
+  d:`<div class="warn"><b>Odatiy xato:</b> referat matnini slaydga to'liq ko'chirish. Slaydda kalit so'zlar, gaplarni esa o'zingiz aytasiz.</div>`},
+ {b:'ai',t:"AI bilan qoralama",full:1,x:flow([{t:"Prompt",d:"Gamma yoki Copilot",c:'c-bl'},{t:"8 slaydlik qoralama"},{t:"PowerPoint ga eksport"},{t:"Siz tahrirlaysiz",d:"qoidalar bo'yicha",c:'c-or'}])+`<div style="height:.6em"></div>`+prompt("Mening sevimli sportim futbol haqida 7-sinf o'quvchisi uchun 7 slaydlik taqdimot tuz. Har slaydda 3 qatordan ko'p bo'lmasin. Oxirida 1 ta savol slaydi.")},
+ {b:'ai',t:"AI bilan rasm",x:ul(["Canva yoki Copilot Designer","Prompt: nima + uslub + ranglar","Natija yoqmasa, promptni o'zgartiring"])+prompt("Kosmosdagi mushuk, multfilm uslubida, yorqin ranglar"),
+  d:cmp({c:'good',h:"Mumkin",i:["Bezak va illyustratsiya","Fantastik rasmlar"]},{c:'bad',h:"Mumkin emas",i:["AI rasmini haqiqiy surat deb ko'rsatish","Real odamlarning soxta rasmini yasash"]})},
+ {b:'hand',t:"PowerPoint da qo'lda",x:keys([["Ctrl+M","Yangi slayd"],["F5","Boshidan ko'rsatish"],["Shift+F5","Joriy slayddan"],["Esc","Ko'rsatishdan chiqish"]]),
+  d:ul(["Dizayn → mavzu tanlang","Qo'shish → o'z rasmingiz","Har slaydni qoidalar bo'yicha tekshiring","Fayl → Eksport → PDF"])},
+ {b:'hand',t:"Taqdimot qilish",x:ul(["Slaydni o'qimang, gapirib bering","1 slayd taxminan 20–30 soniya","Tomoshabinga qarang","Uyda 2 daqiqaga mashq qiling"]),
+  d:`<p style="font-size:1.2em">Taqdimot <b>siz</b> uchun emas, <b>tinglovchi</b> uchun.</p>`},
+ {b:'quiz',q:"Qaysi slayd yaxshiroq?",o:["15 qator mayda matn","Katta sarlavha, rasm va 3 qator","Har so'zda animatsiya"],a:1,w:"Kam matn va rasm: tinglovchi sizni eshitadi, slaydni o'qish bilan band bo'lmaydi."},
+ {b:'task',t:"Amaliyot: “Mening sevimli ...”",x:ol(["Mavzu tanlang: sport, hayvon, kitob, o'yin, shahar","AI bilan 6–8 slaydlik qoralama","O'z rasmlaringizni qo'shing, qoidalar bo'yicha tozalang",".pptx va .pdf qilib Codial_Ism/10_Taqdimot ga saqlang","Guruhga 2 daqiqalik chiqish"])},
+ {b:'home',t:"Uy vazifasi",x:ul(["Taqdimotni oilangizga ko'rsating","Ulardan 1 ta maslahat yozib keling va slaydni yaxshilang"])}
+ ]},
+/* ---------------- 11 ---------------- */
+{t:"Bulut, hamkorlik va raqamli xavfsizlik",goal:"Fayllarni bulutda saqlash, ulashish va o'zini internetdagi firibgarlikdan himoya qilish.",
+ tags:["Google Drive","Parol va 2FA","Fishing"],
+ today:["Bulut","Ulashish","Birga yozish","Zaxira","Parol va 2FA","Firibgarlik"],
+ s:[
+ {b:'hand',t:"Bulut nima?",x:ul(["Fayl internetdagi serverda saqlanadi","Istalgan kompyuter yoki telefondan ochiladi","Kompyuter buzilsa ham fayl qoladi","<b>Google Drive</b>: 15 GB bepul"]),
+  d:flow([{t:"Kompyuter",c:'c-bl'},{t:"Google Drive",d:"bulut",c:'c-or'},{t:"Telefon",c:'c-gr'}])},
+ {b:'hand',t:"Ulashish huquqlari",full:1,x:`<div class="stack">
+   <div style="background:var(--soft)"><b>Ko'ruvchi</b><small>faqat o'qiydi</small></div>
+   <div style="background:var(--soft)"><b>Izohlovchi</b><small>izoh qoldiradi, matnni o'zgartirmaydi</small></div>
+   <div style="background:var(--soft)"><b>Muharrir</b><small>hamma narsani o'zgartiradi</small></div></div>`,
+  d:`<div class="warn"><b>Ehtiyot:</b> “Havolaga ega hamma” deb ulashsangiz, havolani olgan har kim faylni ko'radi. Shaxsiy fayllarni faqat aniq odamlarga ulashing.</div>`},
+ {b:'hand',t:"Birga yozish: Google Docs",x:ul(["Bitta hujjatda bir vaqtda bir necha kishi","Izoh: matnni belgilang → izoh qo'shish","<b>Versiyalar tarixi</b>: o'chirilgan matnni qaytarish","Telegramda faylni “Fayl sifatida” yuboring: sifat buzilmaydi"]),
+  d:`<p class="lead">Guruh loyihasida har kim o'z qismini yozadi, o'qituvchi esa izohlovchi sifatida tekshiradi.</p>`},
+ {b:'hand',t:"Zaxira nusxa: 3-2-1 qoidasi",full:1,x:`<p>Muhim fayl yo'qolmasligi uchun:</p>`,d:D.backup()},
+ {b:'hand',t:"Kuchli parol va 2FA",x:cmp({c:'bad',h:"Kuchsiz",i:["123456","ali2012","qwerty"]},{c:'good',h:"Kuchli",i:["Olma-Daryo-Kitob-47","Har saytda boshqa parol","Parol menejerida saqlash"]}),
+  d:`<p><b>2FA</b> (ikki bosqichli himoya):</p>`+flow([{t:"Parol"},{t:"+ telefon kodi",c:'c-or'},{t:"Kirish",c:'c-gr'}])+`<p class="lead" style="margin-top:.4em">Parolni bilib olishsa ham, telefonsiz kira olishmaydi.</p>`},
+ {b:'hand',t:"Fishing: soxta xabarni taniymiz",x:`<div class="flags"><span>Shoshiltiradi: “darhol”, “1 soat qoldi”</span><span>Sovg'a va'da qiladi</span><span>G'alati havola</span><span>Kod, parol yoki karta so'raydi</span></div>`,
+  d:`<div class="phone"><div class="sms"><span class="flag">Tabriklaymiz!</span> Siz iPhone 16 yutdingiz! Sovg'ani olish uchun <span class="flag">1 soat ichida</span> havolaga o'ting: <span class="flag">c1ick-uz.top/prize</span> va <span class="flag">SMS kodni kiriting</span>.</div></div>`},
+ {b:'hand',t:"Deepfake va AI firibgarlik",x:ul(["AI tanish odamning <b>ovozi yoki videosini</b> soxtalashtirishi mumkin","“Onang kasalxonada, pul tashla” kabi qo'ng'iroqlar","Tekshirish: qo'ng'iroqni tugatib, o'zingiz qayta qo'ng'iroq qiling","SMS kodini hech kimga aytmang, hatto “bank xodimi”ga ham"]),
+  d:`<div class="warn"><b>Oilaviy maxfiy so'z:</b> oilangiz bilan bitta so'z kelishib oling. Shubhali qo'ng'iroqda shu so'zni so'rang.</div>`},
+ {b:'ai',t:"AI: ikkinchi fikr",full:1,x:prompt("Mana shu xabar firibgarlikka o'xshaydimi? Belgilarini sanab ber: “Kartangiz bloklandi. Ochish uchun kodni shu raqamga yuboring.”"),
+  d:`<p>AI belgilarni ko'rsatib beradi, lekin <b>oxirgi qarorni o'zingiz qilasiz</b>. AI ga haqiqiy kod, parol yoki karta raqamini hech qachon yozmang.</p>`},
+ {b:'quiz',q:"SMS: “Kartangiz bloklandi, kodni shu raqamga yuboring”. Nima qilasiz?",o:["Kodni yuboraman","Bankning rasmiy raqamiga o'zim qo'ng'iroq qilaman","Havolani ochib ko'raman"],a:1,w:"Bank hech qachon SMS kodni so'ramaydi. Rasmiy raqam karta orqasida yozilgan."},
+ {b:'task',t:"Amaliyot: guruh va xavfsizlik",x:ol(["Guruh bo'lib bitta Google Docs: har kim bitta qism yozadi","O'qituvchiga “Izohlovchi” huquqini bering","O'qituvchi bergan 5 ta xabardan fishinglarini toping va belgisini ayting","Codial_Ism papkangizni Google Drive ga yuklang"])},
+ {b:'home',t:"Uy vazifasi",x:ul(["Ota-onangiz bilan Google akkauntda 2FA ni yoqing","Oilaviy maxfiy so'zni kelishib oling (hech kimga aytmang, darsda ham)"])}
+ ]},
+/* ---------------- 12 ---------------- */
+{t:"Yakuniy loyiha va himoya",goal:"Kurs davomida o'rganilganlarni bitta portfolio papkada jamlash va himoya qilish.",
+ tags:["Portfolio papka","Himoya","Sertifikat"],
+ today:["Topshiriq","Papka tuzilishi","Talablar","Topshirish","Himoya","Baholash"],
+ s:[
+ {b:'task',t:"Topshiriq",x:`<p>Mavzulardan birini tanlang:</p>`+ul(["Mening kelajak kasbim","Mahallamdagi muammo va yechim","Sevimli sport yoki o'yin tarixi","Shahrimiz tarixi"]),
+  d:`<p style="font-size:1.15em">Bitta mavzu bo'yicha <b>hujjat + jadval + taqdimot</b> tayyorlaysiz va hammasini tartibli papkada topshirasiz.</p>`},
+ {b:'hand',t:"Portfolio papka tuzilishi",x:`<p>Papka nomlari va fayl nomlari 2-dars qoidasi bo'yicha.</p>`,
+  d:D.tree([[0,'Ali_Valiyev_Loyiha','d'],[1,'01_Hujjat','d'],[2,'Ali_Kasbim.docx','f'],[2,'Ali_Kasbim.pdf','f'],[1,'02_Jadval','d'],[2,'Ali_Kasbim_jadval.xlsx','f'],[1,'03_Taqdimot','d'],[2,'Ali_Kasbim.pptx','f'],[1,'04_Rasmlar','d'],[1,'promptlar.txt','f',1]],'Portfolio papka tuzilmasi')},
+ {b:'task',t:"Talablar",full:1,x:`<ul class="checks">
+  <li><b>Hujjat</b>: 2 sahifa, avtomatik mundarija, sahifa raqami, PDF nusxa</li>
+  <li><b>Jadval</b>: kamida 1 ta shartli formula (IF yoki COUNTIF) va 1 ta diagramma</li>
+  <li><b>Taqdimot</b>: 5–7 slayd, dizayn qoidalari bo'yicha</li>
+  <li><b>promptlar.txt</b>: ishlatilgan promptlar va AI xatosini topgan kamida 1 ta misol</li>
+  <li>Hamma narsa to'g'ri papkada va to'g'ri nomda</li></ul>`},
+ {b:'hand',t:"Topshirish",full:1,x:flow([{t:"Papkani ZIP qiling",c:'c-bl'},{t:"Google Drive ga yuklang"},{t:"“Ko'ruvchi” qilib ulashing",c:'c-or'},{t:"Gmail orqali o'qituvchiga havola",c:'c-gr'}])},
+ {b:'task',t:"Himoya: 3 daqiqa",x:ol(["Mavzu: nima haqida va nega tanladim","Nima qildim: hujjat, jadval, taqdimot","AI qayerda yordam berdi va qayerda xato qildi","Nimani o'zim qildim"]),
+  d:`<p class="lead">Keyin 1–2 ta savol. Ota-onalar taklif qilinishi mumkin.</p>`,n:"Himoyaga ota-onalarni taklif qiling: bu keyingi kurslar (grafik dizayn, frontend, backend, android, 3D Max) haqida gaplashish uchun eng yaxshi payt."},
+ {b:'task',t:"Baholash",full:1,x:`<div class="tblwrap"><table class="tbl"><tr><th>Mezon</th><th>Ulush</th></tr>
+  <tr><td>Fayl va papka tartibi (har dars tekshiriladi)</td><td>20%</td></tr>
+  <tr><td>Qo'lda formatlash sifati: Word, Excel, taqdimot</td><td>25%</td></tr>
+  <tr><td>AI dan foydalanish: prompt sifati va javobni tekshirish</td><td>20%</td></tr>
+  <tr><td>Yozish tezligi o'sishi (1-dars va 12-dars)</td><td>10%</td></tr>
+  <tr><td>Yakuniy loyiha va himoya</td><td>25%</td></tr></table></div>`},
+ {b:'hand',t:"Keyingi qadam",x:`<p>Endi siz kompyuterda mustaqil ishlay olasiz va AI dan to'g'ri foydalanasiz.</p>`,
+  d:`<div class="stack">${["Grafik dizayn","Frontend dasturlash","Backend dasturlash","Android dasturlash","3D Max"].map((x,i)=>`<div style="background:var(--${['blue','orange','green','red','ink'][i]});color:var(--${i===4?'bg':'on'})"><b>${x}</b><small>Codial yo'nalishi</small></div>`).join('')}</div>`}
+ ]}
+];
+
+/* ===================== render ===================== */
+const app=document.getElementById('app');
+const BADGE={hand:["Qo'lda",'t-hand'],ai:['AI bilan','t-ai'],task:['Amaliyot','t-task'],quiz:['Savol','t-quiz'],home:['Uy vazifasi','t-home']};
+const pos={};
+let cur=null;
+
+function home(){
+  document.title='Kompyuter savodxonligi + AI';
+  app.innerHTML=`
+  <header class="hero">
+    <span class="eyebrow">Codial · O'quv reja · 12 dars</span>
+    <h1>Kompyuter savodxonligi <span>+ AI</span></h1>
+    <p>Bugun matn, formula va slaydni AI soniyalarda yozib beradi. Lekin faylni saqlash, papkani tartiblash, hujjatni tayyor holga keltirish va AI xatosini topish insonning ishi. Kurs shu ikki ko'nikmani birga o'rgatadi.</p>
+  </header>
+  <section class="pillars">
+    <div class="pillar"><span class="tag t-hand">Qo'lda</span><h3>AI qila olmaydigan ishlar</h3><ul><li>Windows, fayl va papkalar</li><li>Formatlash, saqlash, PDF, chop etish</li><li>Fleshka, arxiv, bulut, zaxira</li><li>Xavfsizlik: parol, 2FA, fishing</li></ul></div>
+    <div class="pillar"><span class="tag t-ai">AI bilan</span><h3>AI dan samarali foydalanish</h3><ul><li>R-V-K-F formulasi bilan prompt</li><li>AI javobini tekshirish</li><li>AI qoralamasidan tayyor mahsulot</li><li>AI ga nimani bermaslik</li></ul></div>
+  </section>
+  <section class="timing">
+    <h3>Har bir dars: 90 daqiqa, avval qo'lda, keyin AI bilan</h3>
+    <div class="tbar">
+      <div style="flex:15;background:var(--ink);color:var(--bg)"><b>15</b>Nazariya</div>
+      <div style="flex:40;background:var(--orange)"><b>40</b>Qo'lda amaliyot</div>
+      <div style="flex:25;background:var(--blue)"><b>25</b>AI bilan tezlashtirish</div>
+      <div style="flex:10;background:var(--green)"><b>10</b>Tekshiruv</div>
+    </div>
+  </section>
+  ${MODULES.map(m=>`<section class="module"><div class="module-h"><span class="eyebrow">Modul ${m.n}</span><h2>${m.t}</h2><p>${m.d}</p></div>
+    <div class="cards">${m.l.map(n=>{const L=LESSONS[n-1];return `<button class="card" data-go="${n}"><span class="num">${n}</span><h3>${L.t}</h3><p>${L.goal}</p><span class="chips">${L.tags.map(t=>`<span class="chip">${t}</span>`).join('')}</span></button>`}).join('')}</div></section>`).join('')}
+  <footer class="foot">
+    <div><b>Kim uchun:</b> 6–9-sinf o'quvchilari va kattalar. Kompyuter bilan deyarli ishlamagan odam ham boshlay oladi.</div>
+    <div><b>Bepul vositalar:</b> Windows 10/11, MS Office yoki Google Docs, ChatGPT, Gemini, Copilot, Canva, Gamma.</div>
+    <div><b>Yosh chegarasi:</b> ko'p AI xizmatlari 13 yoshdan, ota-ona ruxsati bilan. Kichiklar o'qituvchi akkaunti orqali ishlaydi.</div>
+  </footer>`;
+  window.scrollTo(0,0);
+}
+
+function slideHTML(s,L,n){
+  if(s.cover) return `<div class="slide cover"><span class="eyebrow">Modul ${MODULES.find(m=>m.l.includes(n)).n} · 90 daqiqa</span><span class="big">${n}-dars</span><h2>${L.t}</h2><p class="goal">${L.goal}</p><div class="today">${L.today.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
+  const [bl,bc]=BADGE[s.b];
+  if(s.b==='quiz') return `<div class="slide quiz"><span class="tag ${bc}">${bl}</span><h2>${s.q}</h2><div class="opts">${s.o.map((o,i)=>`<button class="opt" data-i="${i}" data-a="${s.a}"><span class="l">${'ABC'[i]}</span>${o}</button>`).join('')}</div><p class="why" hidden>${s.w}</p></div>`;
+  return `<div class="slide"><span class="tag ${bc}">${bl}</span><h2>${s.t}</h2>
+    <div class="sl-grid ${s.full||!s.d?'full':''}"><div>${s.x||''}</div>${s.d?`<div class="fig">${s.d}</div>`:''}</div></div>`;
+}
+
+function lesson(n){
+  const L=LESSONS[n-1];const all=[{cover:1},...L.s];
+  if(pos[n]==null)pos[n]=0;const i=Math.min(pos[n],all.length-1);const s=all[i];
+  cur={n,len:all.length};
+  document.title=`${n}-dars · ${L.t}`;
+  const prevL=n>1?`<button class="btn" data-go="${n-1}">← ${n-1}-dars</button>`:'<span></span>';
+  const nextL=n<12?`<button class="btn primary" data-go="${n+1}">${n+1}-dars →</button>`:'<span></span>';
+  const note=s.n||(s.cover?"Darsni shu slayddan boshlang: bolalarga bugun nimani o'rganishini ko'rsating. Slaydlar orasida ← → tugmalari yoki pult bilan yuring.":'');
+  const stageWasFull=document.fullscreenElement&&document.fullscreenElement.id==='stage';
+  const html=`
+  <div class="topbar"><button class="btn" data-home>← Barcha darslar</button>
+    <div class="lesson-title"><span class="eyebrow">${n}-dars</span><h1>${L.t}</h1></div></div>
+  <div class="stage" id="stage">${slideHTML(s,L,n)}
+    <div class="bar"><button class="ibtn" data-step="-1" aria-label="Oldingi slayd">←</button>
+      <div class="dots">${all.map((x,j)=>`<button class="${j===i?'on':''} ${x.b==='quiz'?'q':''}" data-to="${j}" aria-label="${j+1}-slayd"></button>`).join('')}</div>
+      <span class="count">${i+1} / ${all.length}</span>
+      <button class="ibtn" data-step="1" aria-label="Keyingi slayd">→</button>
+      <button class="ibtn" data-fs aria-label="To'liq ekran">⛶</button></div></div>
+  ${note?`<div class="note"><b>O'qituvchi uchun</b><span>${note}</span></div>`:''}
+  <div class="lesson-nav">${prevL}${nextL}</div>`;
+  if(stageWasFull){ // keep fullscreen: replace only the stage content
+    const st=document.getElementById('stage');const tmp=document.createElement('div');tmp.innerHTML=html;
+    st.innerHTML=tmp.querySelector('#stage').innerHTML;
+    const nt=app.querySelector('.note');const nn=tmp.querySelector('.note');
+    if(nt&&nn)nt.replaceWith(nn);else if(nt)nt.remove();else if(nn)st.after(nn);
+  } else app.innerHTML=html;
+}
+
+function route(){
+  const m=/^#dars-(\d{1,2})$/.exec(location.hash);
+  const n=m?+m[1]:0;
+  if(n>=1&&n<=12){lesson(n);} else {cur=null;home();}
+}
+function go(n){ if(location.hash==='#dars-'+n) route(); else location.hash='dars-'+n; window.scrollTo(0,0);}
+function step(d){ if(!cur)return; const nx=Math.max(0,Math.min(cur.len-1,(pos[cur.n]||0)+d)); if(nx!==pos[cur.n]){pos[cur.n]=nx;lesson(cur.n);} }
+
+app.addEventListener('click',e=>{
+  const t=e.target.closest('button');if(!t)return;
+  if(t.dataset.go){go(+t.dataset.go);return;}
+  if('home' in t.dataset){location.hash='';history.replaceState(null,'',location.pathname+location.search);route();return;}
+  if(t.dataset.step){step(+t.dataset.step);return;}
+  if(t.dataset.to){pos[cur.n]=+t.dataset.to;lesson(cur.n);return;}
+  if('fs' in t.dataset){const st=document.getElementById('stage');
+    try{ if(document.fullscreenElement) document.exitFullscreen(); else st.requestFullscreen().catch(()=>{}); }catch(_){}
+    return;}
+  if(t.classList.contains('opt')){
+    const a=+t.dataset.a,i=+t.dataset.i,box=t.parentElement;
+    box.querySelectorAll('.opt').forEach(b=>{b.classList.remove('ok','no'); if(+b.dataset.i===a)b.classList.add('ok');});
+    if(i!==a)t.classList.add('no');
+    box.nextElementSibling.hidden=false;
+  }
+});
+document.addEventListener('keydown',e=>{
+  if(!cur||e.target.closest('input,textarea'))return;
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();step(1);}
+  else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();step(-1);}
+});
+window.addEventListener('hashchange',route);
+route();
+</script>
+</body>
+</html>
