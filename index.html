@@ -3,6 +3,9 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Codial: Kompyuter savodxonligi + AI kursi, 12 darslik interaktiv slaydlar.">
+<meta name="theme-color" content="#2D5BE3">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='4' width='28' height='19' rx='3' fill='%232D5BE3'/%3E%3Crect x='12' y='24' width='8' height='3' fill='%2318213D'/%3E%3Crect x='8' y='27' width='16' height='3' rx='1.5' fill='%2318213D'/%3E%3C/svg%3E">
 <style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
 <title>Kompyuter savodxonligi + AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,12 +15,14 @@
 /* Layout: notebook-paper site; home = curriculum map, lesson = 16:9 slide stage with teacher notes below */
 :root{
   --bg:#EEF2F9; --surface:#FFFFFF; --soft:#E3EAFB; --ink:#18213D; --muted:#56627F; --line:#CDD6E8;
-  --blue:#2D5BE3; --orange:#EE7F1B; --green:#16936A; --red:#D9413F; --yellow:#F5C33B; --on:#FFFFFF;
+  --blue:#2D5BE3; --orange:#B85600; --green:#0F7A57; --red:#C93432; --yellow:#F5C33B; --on:#FFFFFF;
   --grid:rgba(45,91,227,.07);
   --f-display:"Fredoka","Nunito",system-ui,sans-serif;
   --f-body:"Nunito",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
 }
+/* show >= exactly as students must type it (no ≥ ligature) */
+kbd,code,.prompt,.tmono,.bar .count,.tbar b{font-variant-ligatures:none}
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#0E1322; --surface:#171F35; --soft:#1F2A4A; --ink:#E7ECF8; --muted:#9BA7C4; --line:#2C3858;
   --blue:#7D9CFF; --orange:#FFA24D; --green:#3CC98F; --red:#FF7B79; --yellow:#F6D266; --on:#0E1322;
@@ -31,7 +36,7 @@
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.5;
   background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);
   background-size:24px 24px}
-.wrap{max-width:1180px;margin:0 auto;padding-block:28px 64px;
+.wrap{max-width:1180px;margin:0 auto;padding-block:clamp(16px,3vw,28px) 64px;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--f-display);font-weight:600;text-wrap:balance;margin:0;line-height:1.15}
 a{color:var(--blue)}
@@ -64,8 +69,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .module-h h2{font-size:1.5rem}
 .module-h p{margin:0;color:var(--muted)}
 .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
-.card{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:8px;align-content:start;transition:border-color .15s,transform .15s}
-.card:hover{border-color:var(--blue);transform:translateY(-2px)}
+.card{all:unset;box-sizing:border-box;cursor:pointer;background:var(--surface);border:2px solid var(--line);border-radius:16px;padding:18px;display:grid;gap:8px;align-content:start;transition:border-color .15s,translate .2s,box-shadow .2s}
+.card:hover{border-color:var(--blue);translate:0 -3px;box-shadow:0 10px 24px -14px var(--blue)}
 .card:focus-visible{outline:3px solid var(--orange)}
 .card .num{font-family:var(--f-display);font-size:2.2rem;line-height:1;color:var(--blue)}
 .card h3{font-size:1.15rem}
@@ -99,8 +104,10 @@ button{font:inherit;color:inherit;cursor:pointer}
 .bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:2px solid var(--line);background:var(--soft);flex-wrap:wrap}
 .bar .count{font-family:var(--f-mono);font-weight:700;font-size:.9rem}
 .dots{display:flex;gap:5px;flex:1;flex-wrap:wrap;min-width:0}
-.dots button{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:var(--line)}
-.dots button.on{background:var(--blue)}
+.dots button{width:12px;height:12px;border-radius:50%;border:0;padding:0;background:var(--line);position:relative;transition:transform .2s,background .2s}
+.dots button::after{content:"";position:absolute;inset:-6px}
+.dots button:hover{transform:scale(1.3)}
+.dots button.on{background:var(--blue);transform:scale(1.35)}
 .dots button.q{background:var(--yellow)}
 .dots button.q.on{background:var(--blue)}
 .ibtn{border:2px solid var(--line);background:var(--surface);border-radius:10px;min-width:42px;height:38px;font-weight:800;font-size:1.05rem}
@@ -202,18 +209,142 @@ kbd{font-family:var(--f-mono);font-size:.82em;font-weight:700;background:var(--s
 .ln{stroke:var(--ink);stroke-width:2;fill:none}
 .lnm{stroke:var(--muted);stroke-width:1.5;fill:none;stroke-dasharray:4 4}
 .arr{stroke:var(--ink);stroke-width:2.5;fill:none}
-.lred{stroke:var(--red);stroke-width:2;stroke-dasharray:6 4}
+.lred{stroke:var(--red);stroke-width:2;stroke-dasharray:6 5}
 
 @container (max-width: 680px){
-  .sl-grid{grid-template-columns:1fr}
+  .sl-grid{grid-template-columns:1fr;align-content:start;gap:16px}
+  .fig svg,.full .fig svg{max-height:60vh}
   .slide{padding:20px 18px 14px}
   .cover .big{font-size:3.6em}
 }
-@media (max-width: 700px){
+/* ---------- responsive ---------- */
+@media (min-width: 1500px){.wrap{max-width:1400px}}
+@media (max-width: 1000px){
   .stage{aspect-ratio:auto}
-  .slide{min-height:420px}
+  .slide{min-height:min(70vh,520px)}
+  .stage:fullscreen .slide{min-height:0}
 }
-@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+@media (max-width: 560px){
+  .bar{padding:8px 10px;gap:8px}
+  .bar .dots{order:5;flex-basis:100%;justify-content:center}
+  .bar .count{margin-left:auto}
+  .topbar .btn{padding:6px 10px;font-size:.92rem}
+  .lesson-nav .btn{flex:1;justify-content:center}
+  .tbar div{font-size:.72rem;padding:6px}
+  .tbar b{font-size:.85rem}
+}
+.tools{display:flex;gap:8px;margin-left:auto}
+.hero-top{display:flex;align-items:center;gap:10px}
+.prog{height:4px;background:var(--line)}
+.prog i{display:block;height:100%;width:var(--p);background:linear-gradient(90deg,var(--blue),var(--green));transition:width .4s ease}
+.notes-off .note{display:none}
+.timing small{display:block;margin-top:10px;color:var(--muted);font-size:.85rem}
+
+/* ---------- animations ---------- */
+@keyframes inR{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+@keyframes up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{opacity:0;transform:scale(.4)}70%{opacity:1;transform:scale(1.12)}100%{opacity:1;transform:scale(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes draw{from{stroke-dashoffset:var(--len,400)}to{stroke-dashoffset:0}}
+@keyframes march{to{stroke-dashoffset:-22}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+@keyframes glow{0%,100%{opacity:.15}50%{opacity:.55}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+@keyframes press{0%,14%,100%{transform:none;border-bottom-width:4px}7%{transform:translateY(2px);border-bottom-width:2px;border-color:var(--orange)}}
+@keyframes shake{0%,100%{transform:none}20%,60%{transform:translateX(-6px)}40%,80%{transform:translateX(6px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes nudgeR{0%,100%{translate:0 0}50%{translate:5px 0}}
+@keyframes nudgeD{0%,100%{translate:0 0}50%{translate:0 5px}}
+@keyframes hl{0%,100%{background-size:0 100%}30%,80%{background-size:100% 100%}}
+@keyframes zone{0%,22%{opacity:1;transform:translateY(2px)}30%,100%{opacity:.5;transform:none}}
+@keyframes ramIn{0%,8%{opacity:0;transform:scale(.4)}14%,62%{opacity:1;transform:none}70%,100%{opacity:0;transform:scale(.4)}}
+@keyframes powerOff{0%,60%{opacity:0}64%,82%{opacity:1}90%,100%{opacity:0}}
+@keyframes dim{0%,62%{opacity:1}66%,84%{opacity:.25}92%,100%{opacity:1}}
+@keyframes fly{0%,15%{transform:none;opacity:1}55%,100%{transform:translateX(180px);opacity:1}}
+@keyframes ghost{0%,15%{opacity:1}55%,100%{opacity:.15}}
+@keyframes confetti{0%{opacity:1;transform:translate(0,0) rotate(0)}100%{opacity:0;transform:translate(var(--x),var(--y)) rotate(540deg)}}
+
+.slide.in-r{animation:inR .45s cubic-bezier(.2,.8,.2,1) both}
+.slide.in-l{animation:inL .45s cubic-bezier(.2,.8,.2,1) both}
+.slide.in-0{animation:fade .4s ease both}
+.slide > .tag{animation:pop .4s .1s both}
+.slide > h2{animation:up .45s .12s both}
+/* staggered reveal: --i set from JS */
+.rv{animation:up .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.25s + var(--i,0) * .12s)}
+.rv-pop{animation:pop .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.3s + var(--i,0) * .12s)}
+.fig{animation:fade .6s .35s both}
+.cover .big{animation:pop .7s .1s both, bob 4s 1s ease-in-out infinite}
+.cover .goal{animation:up .5s .3s both}
+/* flows: arrow nudges, step lights up in sequence (JS adds .lit) */
+.fa{animation:nudgeD 1.2s ease-in-out infinite}
+.full .flow .fa{animation-name:nudgeR}
+@container (max-width: 680px){.full .flow .fa{animation-name:nudgeD}}
+/* individual translate/scale props compose with the reveal animation's transform */
+.fs{transition:translate .3s,scale .3s,box-shadow .3s,outline-color .3s;outline:3px solid transparent;outline-offset:2px}
+.fs.lit{translate:0 -3px;scale:1.04;box-shadow:0 8px 20px -8px var(--blue);outline-color:var(--yellow)}
+/* keys: a wave of key presses */
+.key kbd{animation:press 4.5s ease-in-out infinite;animation-delay:calc(1s + var(--i,0) * .35s + var(--k,0) * .12s)}
+/* compare cards: check / cross markers */
+.cmp .good li::marker{content:"✓  ";color:var(--green)}
+.cmp .bad li::marker{content:"✕  ";color:var(--red)}
+.cmp > div{transition:translate .2s}
+.cmp > div:hover{translate:0 -3px}
+/* phishing flags light up one by one */
+.flag{background:linear-gradient(color-mix(in srgb,var(--red) 30%,transparent),color-mix(in srgb,var(--red) 30%,transparent)) no-repeat 0 0/0 100%;
+  animation:hl 5s ease-in-out infinite;animation-delay:calc(.8s + var(--i,0) * .6s)}
+.sms{animation:pop .6s .4s both}
+.rvkf .L{display:inline-block;animation:pulse 2.4s ease-in-out infinite;animation-delay:calc(1.2s + var(--i,0) * .6s)}
+.stack div{transition:translate .3s,box-shadow .3s}
+.stack div.lit{translate:12px 0;box-shadow:-6px 0 0 var(--yellow)}
+.tbl tr{transition:background .2s}
+.tbl tr:hover td{background:var(--soft)}
+/* quiz feedback */
+.opt{transition:transform .15s,border-color .15s,background .2s}
+.opt:active{transform:scale(.98)}
+.opt.no{animation:shake .45s}
+.opt.ok{animation:pulse .5s}
+.why:not([hidden]){animation:up .4s both}
+.slide.measure{position:absolute;left:0;top:0;visibility:hidden;pointer-events:none;flex:none}
+.measure,.measure *{animation:none !important;transition:none !important}
+.burst{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+.burst i{position:absolute;width:10px;height:14px;border-radius:2px;animation:confetti 1.1s cubic-bezier(.2,.7,.3,1) forwards}
+/* home */
+.hero > *{animation:up .6s both}
+.hero > :nth-child(2){animation-delay:.08s}.hero > :nth-child(3){animation-delay:.16s}
+.pillar,.card{animation:up .55s both;animation-delay:calc(var(--i,0) * .06s)}
+.tbar div{transform-origin:left;animation:growX .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(.2s + var(--i,0) * .15s)}
+.card .num{transition:transform .25s}
+.card:hover .num{transform:rotate(-8deg) scale(1.15)}
+
+/* svg animation helpers (transform-box makes transforms local to each shape) */
+svg .a-pop,svg .a-grow,svg .a-pulse,svg .a-fly,svg .a-zone,svg .a-ram,svg .a-bob{transform-box:fill-box;transform-origin:center}
+svg .a-pop{animation:pop .5s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+svg .a-in{animation:up .45s both;animation-delay:var(--d,0s)}
+svg .a-fade{animation:fade .6s both;animation-delay:var(--d,0s)}
+svg .a-grow{transform-origin:bottom;animation:grow .9s cubic-bezier(.2,.8,.2,1) both;animation-delay:var(--d,0s)}
+svg .a-draw{stroke-dasharray:var(--len,400);animation:draw 1.2s ease both;animation-delay:var(--d,0s)}
+svg .a-march{animation:march 1s linear infinite}
+svg .a-pulse{animation:pulse 1.8s ease-in-out infinite;animation-delay:var(--d,0s)}
+svg .a-glow{animation:glow 2.4s ease-in-out infinite;animation-delay:var(--d,0s)}
+svg .a-glow.soft{animation-name:glowSoft}
+@keyframes glowSoft{0%,100%{opacity:.06}50%{opacity:.28}}
+svg .a-blink{animation:blink 1.1s steps(1) infinite}
+svg .a-bob{animation:bob 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
+svg .a-zone,.legend .lz{animation:zone 7.5s ease-in-out infinite;animation-delay:calc(var(--z) * 1.5s - 7.5s)}
+.legend .lz{font-weight:800}
+svg .a-fly{animation:fly 4s ease-in-out infinite}
+svg .a-ghost{animation:ghost 4s ease-in-out infinite}
+svg .a-ram{animation:ramIn 7s ease-in-out infinite;animation-delay:var(--d,0s)}
+svg .a-off{animation:powerOff 7s ease-in-out infinite}
+svg .a-dim{animation:dim 7s ease-in-out infinite}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after,svg *{animation:none !important;transition:none !important}
+  .flag{background-size:100% 100%}
+}
 </style>
 </head>
 <body>
@@ -233,7 +364,8 @@ kbd{font-family:var(--f-mono);font-size:.82em;font-weight:700;background:var(--s
 const S=(vb,inner,label)=>`<svg viewBox="${vb}" role="img" aria-label="${label}">${inner}</svg>`;
 const T=(x,y,s,o={})=>`<text x="${x}" y="${y}" text-anchor="${o.a||'middle'}" font-size="${o.s||15}" class="${o.c||'t'}">${s}</text>`;
 const R=(x,y,w,h,c='f-surf',rx=8,st='st')=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${rx}" class="${c} ${st}"/>`;
-const B=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="13" class="f-or"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="15" class="tb">${n}</text>`;
+const B=(x,y,n)=>`<g class="a-pop" style="--d:${(.4+n*.3).toFixed(2)}s"><circle cx="${x}" cy="${y}" r="13" class="f-or"/><text x="${x}" y="${y+5}" text-anchor="middle" font-size="15" class="tb">${n}</text></g>`;
+const G=(cls,d,inner)=>`<g class="${cls}" style="--d:${d}s">${inner}</g>`;
 const L=(x1,y1,x2,y2,c='arr',m=true)=>`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="${c}" ${m?'marker-end="url(#ah)"':''}/>`;
 
 const keys=list=>`<div class="keys">${list.map(([k,d])=>`<div class="key"><span class="kc">${k.split('+').map(x=>`<kbd>${x}</kbd>`).join('<i>+</i>')}</span><span>${d}</span></div>`).join('')}</div>`;
@@ -248,39 +380,40 @@ const D={
 computer(){
   let k='';for(let r=0;r<3;r++)for(let c=0;c<14;c++)k+=`<rect x="${31+c*17}" y="${242+r*13}" width="13" height="9" rx="2" class="f-surf"/>`;
   return S('0 0 480 310',`
-  ${R(20,14,250,168,'f-soft',12)}${R(36,30,218,136,'f-surf',4)}
-  ${R(56,50,120,70,'f-soft',4,'st1')}<rect x="56" y="50" width="120" height="14" class="f-blue"/>
-  <rect x="190" y="60" width="44" height="8" rx="3" class="f-line"/><rect x="190" y="76" width="34" height="8" rx="3" class="f-line"/>
-  <rect x="131" y="182" width="28" height="22" class="f-mut"/>${R(96,202,98,10,'f-mut',4)}
-  ${R(300,14,110,200,'f-soft',10)}
+  ${G('a-in',.1,`${R(20,14,250,168,'f-soft',12)}${R(36,30,218,136,'f-surf',4)}
+  ${G('a-pop',.6,`${R(56,50,120,70,'f-soft',4,'st1')}<rect x="56" y="50" width="120" height="14" class="f-blue"/>`)}
+  <rect x="190" y="60" width="44" height="8" rx="3" class="f-line a-pop" style="--d:.9s"/><rect x="190" y="76" width="34" height="8" rx="3" class="f-line"/>
+  <rect x="131" y="182" width="28" height="22" class="f-mut"/>${R(96,202,98,10,'f-mut',4)}`)}
+  ${G('a-in',.25,`${R(300,14,110,200,'f-soft',10)}
   <line x1="318" y1="44" x2="392" y2="44" class="ln"/><line x1="318" y1="60" x2="392" y2="60" class="ln"/>
-  <circle cx="355" cy="186" r="10" class="f-gr"/>
-  ${R(22,232,248,52,'f-soft',8)}${k}
-  <rect x="330" y="236" width="46" height="64" rx="23" class="f-soft st"/><line x1="353" y1="236" x2="353" y2="260" class="ln"/>
+  <circle cx="355" cy="186" r="10" class="f-gr a-blink"/>`)}
+  ${G('a-in',.4,`${R(22,232,248,52,'f-soft',8)}${k}`)}
+  ${G('a-bob',.5,`<rect x="330" y="236" width="46" height="64" rx="23" class="f-soft st"/><line x1="353" y1="236" x2="353" y2="260" class="ln"/>`)}
   ${B(22,16,1)}${B(410,16,2)}${B(22,234,3)}${B(380,238,4)}`,'Kompyuter qismlari: monitor, tizim bloki, klaviatura, sichqoncha');
 },
 mouse(){
   return S('0 0 480 280',`
   <rect x="170" y="30" width="140" height="220" rx="70" class="f-surf st"/>
-  <path d="M240 30A70 70 0 0 0 170 100L170 120L240 120Z" class="f-blue" opacity=".35"/>
-  <path d="M240 30A70 70 0 0 1 310 100L310 120L240 120Z" class="f-or" opacity=".35"/>
+  <path d="M240 30A70 70 0 0 0 170 100L170 120L240 120Z" class="f-blue a-glow"/>
+  <path d="M240 30A70 70 0 0 1 310 100L310 120L240 120Z" class="f-or a-glow" style="--d:1.2s"/>
   <rect x="170" y="30" width="140" height="220" rx="70" class="f-none st"/>
   <line x1="240" y1="30" x2="240" y2="120" class="ln"/><line x1="170" y1="120" x2="310" y2="120" class="ln"/>
-  <rect x="231" y="52" width="18" height="40" rx="9" class="f-ink"/>
-  ${T(150,62,'Chap tugma',{a:'end',s:17})}${T(150,84,'1 marta: tanlash',{a:'end',c:'tm',s:14})}${T(150,102,'2 marta: ochish',{a:'end',c:'tm',s:14})}
-  ${T(330,62,"O'ng tugma",{a:'start',s:17})}${T(330,84,'menyu ochadi',{a:'start',c:'tm',s:14})}
-  <line x1="249" y1="80" x2="326" y2="160" class="lnm"/>
-  ${T(330,166,"G'ildirak",{a:'start',s:17})}${T(330,186,'sahifani aylantiradi',{a:'start',c:'tm',s:14})}`,'Sichqoncha tugmalari');
+  <rect x="231" y="52" width="18" height="40" rx="9" class="f-ink a-bob" style="--d:.6s"/>
+  ${G('a-in',.3,`${T(150,62,'Chap tugma',{a:'end',s:17})}${T(150,84,'1 marta: tanlash',{a:'end',c:'tm',s:14})}${T(150,102,'2 marta: ochish',{a:'end',c:'tm',s:14})}`)}
+  ${G('a-in',.6,`${T(330,62,"O'ng tugma",{a:'start',s:17})}${T(330,84,'menyu ochadi',{a:'start',c:'tm',s:14})}`)}
+  <line x1="249" y1="80" x2="326" y2="160" class="lnm a-fade" style="--d:.9s"/>
+  ${G('a-in',.9,`${T(330,166,"G'ildirak",{a:'start',s:17})}${T(330,186,'sahifani aylantiradi',{a:'start',c:'tm',s:14})}`)}`,'Sichqoncha tugmalari');
 },
 desktop(){
-  const icons=['Bu kompyuter','Savat','Hujjatlar'].map((n,i)=>`${R(26,18+i*66,34,30,'f-yel',5,'st1')}${T(43,64+i*66,n,{s:11})}`).join('');
+  const icons=['Bu kompyuter','Savat','Hujjatlar'].map((n,i)=>G('a-pop',.1+i*.12,`${R(26,18+i*66,34,30,'f-yel',5,'st1')}${T(43,64+i*66,n,{s:11})}`)).join('');
   return S('0 0 480 300',`
   <rect x="2" y="2" width="476" height="296" rx="12" class="f-soft st"/>
   ${icons}
-  ${R(150,36,280,180,'f-surf',8)}<path d="M158 36h264a8 8 0 0 1 8 8v20H150V44a8 8 0 0 1 8-8z" class="f-line"/>
+  ${G('a-pop',.5,`${R(150,36,280,180,'f-surf',8)}<path d="M158 36h264a8 8 0 0 1 8 8v20H150V44a8 8 0 0 1 8-8z" class="f-line"/>
   ${T(164,55,'Bloknot',{a:'start',s:13})}
   ${T(350,56,'—',{s:16})}${T(377,56,'☐',{s:15})}<rect x="396" y="38" width="32" height="24" rx="4" class="f-red"/>${T(412,56,'✕',{s:14,c:'tb'})}
   <rect x="170" y="84" width="200" height="8" rx="3" class="f-line"/><rect x="170" y="102" width="160" height="8" rx="3" class="f-line"/><rect x="170" y="120" width="180" height="8" rx="3" class="f-line"/>
+  <rect x="${170}" y="138" width="2.5" height="14" class="f-ink a-blink"/>`)}
   <path d="M2 262h476v24a12 12 0 0 1-12 12H14a12 12 0 0 1-12-12z" class="f-ink"/>
   <rect x="198" y="270" width="9" height="9" class="f-blue"/><rect x="209" y="270" width="9" height="9" class="f-blue"/><rect x="198" y="281" width="9" height="9" class="f-blue"/><rect x="209" y="281" width="9" height="9" class="f-blue"/>
   <rect x="230" y="271" width="18" height="18" rx="3" class="f-yel"/><rect x="256" y="271" width="18" height="18" rx="3" class="f-or"/><rect x="282" y="271" width="18" height="18" rx="3" class="f-gr"/>
@@ -293,11 +426,15 @@ winctl(){
   ${T(40,50,'Hujjat.txt - Bloknot',{a:'start',s:16})}
   ${R(300,18,50,52,'f-surf',0,'st1')}${R(350,18,50,52,'f-surf',0,'st1')}<rect x="400" y="18" width="60" height="52" class="f-red st1"/>
   ${T(325,51,'—',{s:22})}${T(375,52,'☐',{s:22})}${T(430,52,'✕',{s:22,c:'tb'})}
-  <line x1="325" y1="72" x2="325" y2="92" class="lnm"/><line x1="375" y1="72" x2="375" y2="117" class="lnm"/><line x1="430" y1="72" x2="430" y2="142" class="lnm"/>
-  ${T(325,108,'Kichraytirish',{s:15})}${T(360,133,'Kattalashtirish',{s:15})}${T(430,158,'Yopish',{s:15})}`,'Oyna tugmalari');
+  <circle cx="325" cy="44" r="22" class="f-blue a-glow soft"/><circle cx="375" cy="44" r="22" class="f-blue a-glow soft" style="--d:.8s"/><circle cx="430" cy="44" r="24" class="f-yel a-glow soft" style="--d:1.6s"/>
+  ${G('a-in',.3,`<line x1="325" y1="72" x2="325" y2="92" class="lnm"/>${T(325,108,'Kichraytirish',{s:15})}`)}
+  ${G('a-in',.6,`<line x1="375" y1="72" x2="375" y2="117" class="lnm"/>${T(360,133,'Kattalashtirish',{s:15})}`)}
+  ${G('a-in',.9,`<line x1="430" y1="72" x2="430" y2="142" class="lnm"/>${T(430,158,'Yopish',{s:15})}`)}`,'Oyna tugmalari');
 },
 keyboard(){
-  let k='';const key=(x,y,w,c,lab)=>{k+=`<rect x="${x}" y="${y}" width="${w}" height="30" rx="5" class="${c} st1"/>`;if(lab)k+=T(x+w/2,y+20,lab,{s:11,c:c==='f-surf'||c==='f-line'||c==='f-yel'?'t':'tb'})};
+  // each colour zone lights up in turn, matching the legend below
+  const Z={'f-blue':0,'f-gr':1,'f-or':2,'f-yel':3,'f-red':4};
+  let k='';const key=(x,y,w,c,lab)=>{const z=Z[c];k+=`<g${z!=null?` class="a-zone" style="--z:${z}"`:''}><rect x="${x}" y="${y}" width="${w}" height="30" rx="5" class="${c} st1"/>${lab?T(x+w/2,y+20,lab,{s:11,c:c==='f-surf'||c==='f-line'||c==='f-yel'?'t':'tb'}):''}</g>`};
   for(let i=0;i<12;i++)key(10+i*34,10,30,'f-gr');key(418,10,62,'f-or','Backspace');
   key(10,46,46,'f-line','Tab');for(let i=0;i<11;i++)key(60+i*34,46,30,'f-blue');key(434,46,46,'f-line');
   key(10,82,56,'f-or','Caps');for(let i=0;i<10;i++)key(70+i*34,82,30,'f-blue');key(410,82,70,'f-or','Enter');
@@ -305,43 +442,48 @@ keyboard(){
   key(10,154,40,'f-line','Ctrl');key(54,154,40,'f-line','Win');key(98,154,40,'f-line','Alt');key(142,154,200,'f-yel','Probel');key(346,154,40,'f-line','Alt');
   key(392,154,26,'f-red');key(422,154,26,'f-red');key(452,154,26,'f-red');
   return S('0 0 490 194',k,'Klaviatura zonalari')+`<div class="legend" style="margin-top:.6em">
-  <span><i style="background:var(--blue)"></i>Harflar</span><span><i style="background:var(--green)"></i>Raqamlar</span>
-  <span><i style="background:var(--orange)"></i>Shift, Caps, Enter, Backspace</span><span><i style="background:var(--yellow)"></i>Probel</span><span><i style="background:var(--red)"></i>Strelkalar</span></div>`;
+  <span class="lz" style="--z:0"><i style="background:var(--blue)"></i>Harflar</span><span class="lz" style="--z:1"><i style="background:var(--green)"></i>Raqamlar</span>
+  <span class="lz" style="--z:2"><i style="background:var(--orange)"></i>Shift, Caps, Enter, Backspace</span><span class="lz" style="--z:3"><i style="background:var(--yellow)"></i>Probel</span><span class="lz" style="--z:4"><i style="background:var(--red)"></i>Strelkalar</span></div>`;
 },
 tree(items,label,h){
   const last={};let g='';
   items.forEach(([d,name,type,hl],i)=>{
     const y=26+i*30,x=16+d*30;
-    if(d>0){const py=last[d-1];g+=`<path d="M${x-16} ${py+10}V${y}H${x-4}" class="ln"/>`;}
-    last[d]=y;
+    const py=last[d-1];last[d]=y;
+    g+=`<g class="a-in" style="--d:${(.2+i*.18).toFixed(2)}s">`;
+    if(d>0)g+=`<path d="M${x-16} ${py+10}V${y}H${x-4}" class="ln"/>`;
     g+= type==='d'
       ? `<path d="M${x} ${y-9}h9l3 3h12v15h-24z" class="f-yel st1"/>`
-      : `<path d="M${x+3} ${y-11}h12l5 5v17h-17z" class="${hl?'f-blue':'f-surf'} st1"/>`;
-    g+=T(x+32,y+5,name,{a:'start',s:15,c:type==='d'?'t':'tmono'});
+      : `<path d="M${x+3} ${y-11}h12l5 5v17h-17z" class="${hl?'f-blue a-pulse':'f-surf'} st1"/>`;
+    g+=T(x+32,y+5,name,{a:'start',s:15,c:type==='d'?'t':'tmono'})+'</g>';
   });
   return S(`0 0 480 ${h||items.length*30+16}`,g,label);
 },
 ext(){
   const L2=[['.docx','f-blue','Word hujjat'],['.xlsx','f-gr','Excel jadval'],['.pptx','f-or','Taqdimot'],['.pdf','f-red','PDF hujjat'],['.jpg','f-yel','Rasm'],['.zip','f-line','Arxiv'],['.exe','f-ink','Dastur']];
   return S('0 0 480 250',L2.map(([e,c,n],i)=>{const cx=60+(i%4)*120,y=12+Math.floor(i/4)*124;
-    return `<path d="M${cx-26} ${y}h36l16 16v62h-52z" class="f-surf st"/><path d="M${cx+10} ${y}v16h16" class="ln"/>
-    <rect x="${cx-34}" y="${y+40}" width="68" height="22" rx="5" class="${c}"/>${T(cx,y+56,e,{s:14,c:c==='f-yel'||c==='f-line'?'t':'tb'})}
-    ${T(cx,y+100,n,{s:13,c:'tm'})}`}).join(''),'Fayl turlari');
+    return G('a-pop',(.2+i*.15).toFixed(2),`<path d="M${cx-26} ${y}h36l16 16v62h-52z" class="f-surf st"/><path d="M${cx+10} ${y}v16h16" class="ln"/>
+    <rect x="${cx-34}" y="${y+40}" width="68" height="22" rx="5" class="${c}${e==='.exe'?' a-pulse':''}"/>${T(cx,y+56,e,{s:14,c:c==='f-yel'||c==='f-line'?'t':'tb'})}
+    ${T(cx,y+100,n,{s:13,c:'tm'})}`)}).join(''),'Fayl turlari');
 },
 copyMove(){
-  const box=(x,y,label,file,ghost)=>`${R(x,y,110,72,'f-soft',8)}${T(x+55,y-6,label,{s:13,c:'tm'})}`+
-    (file?`<path d="M${x+42} ${y+16}h18l8 8v28h-26z" class="${ghost?'f-none lnm':'f-blue st1'}"/>`:'');
+  // the moving file flies from folder A to folder B (180 user units to the right)
+  const file=(x,y,cls)=>`<path d="M${x+42} ${y+16}h18l8 8v28h-26z" class="${cls}"/>`;
+  const box=(x,y,label)=>`${R(x,y,110,72,'f-soft',8)}${T(x+55,y-6,label,{s:13,c:'tm'})}`;
   return S('0 0 480 230',`
-  ${T(20,40,'Nusxa',{a:'start',s:17})}${T(20,60,'olish',{a:'start',s:17})}
-  ${box(150,22,'A papka',1)}${L(266,58,322,58)}${box(330,22,'B papka',1)}
-  ${T(20,160,"Ko'chirish",{a:'start',s:17})}
-  ${box(150,130,'A papka',1,1)}${L(266,166,322,166)}${box(330,130,'B papka',1)}
+  ${T(20,40,'Nusxa',{a:'start',s:17})}${T(20,60,'olish',{a:'start',s:17})}${T(20,80,'Ctrl+C → Ctrl+V',{a:'start',s:11,c:'tmono'})}
+  ${box(150,22,'A papka')}${L(266,58,322,58)}${box(330,22,'B papka')}
+  ${file(150,22,'f-blue st1')}${file(150,22,'f-blue st1 a-fly')}
+  ${T(20,160,"Ko'chirish",{a:'start',s:17})}${T(20,180,'Ctrl+X → Ctrl+V',{a:'start',s:11,c:'tmono'})}
+  ${box(150,130,'A papka')}${L(266,166,322,166)}${box(330,130,'B papka')}
+  ${file(150,130,'f-none lnm')}${file(150,130,'f-or st1 a-fly')}
   ${T(240,222,"Nusxada fayl ikkita bo'ladi, ko'chirishda bitta qoladi",{s:13,c:'tm'})}`,'Nusxa olish va ko\'chirish farqi');
 },
 explorer(){
   const side=['Ish stoli','Yuklamalar','Hujjatlar','Bu kompyuter','C: disk','D: disk'].map((n,i)=>T(24,84+i*26,n,{a:'start',s:12})).join('');
-  let files='';['Rasmlar','Hujjatlar','Jadvallar','Arxivlar'].forEach((n,i)=>{const x=140+i*80;files+=`<path d="M${x} 84h18l5 5h27v34h-50z" class="f-yel st1"/>${T(x+25,142,n,{s:11})}`});
-  ['referat.docx','baho.xlsx','rasm.jpg'].forEach((n,i)=>{const x=148+i*80;files+=`<path d="M${x} 162h26l8 8v32h-34z" class="f-surf st1"/>${T(x+17,220,n,{s:10,c:'tm'})}`});
+  let files='';['Rasmlar','Hujjatlar','Jadvallar','Arxivlar'].forEach((n,i)=>{const x=140+i*80;files+=G('a-pop',(.3+i*.1).toFixed(2),`<path d="M${x} 84h18l5 5h27v34h-50z" class="f-yel st1"/>${T(x+25,142,n,{s:11})}`)});
+  ['referat.docx','baho.xlsx','rasm.jpg'].forEach((n,i)=>{const x=148+i*80;files+=G('a-pop',(.75+i*.1).toFixed(2),`<path d="M${x} 162h26l8 8v32h-34z" class="f-surf st1"/>${T(x+17,220,n,{s:10,c:'tm'})}`)});
+  files+=`<rect x="250" y="27" width="2" height="14" class="f-ink a-blink"/>`;
   return S('0 0 480 260',`
   ${R(10,10,460,240,'f-surf',10)}
   ${R(122,20,236,26,'f-soft',6,'st1')}${T(132,38,'D:\\ › Codial_Ali',{a:'start',s:12,c:'tmono'})}
@@ -358,9 +500,9 @@ browser(){
   ${T(262,38,'+',{s:18})}
   <rect x="11" y="44" width="458" height="38" class="f-soft"/>
   ${T(30,69,'←',{s:17})}${T(55,69,'↻',{s:17})}
-  ${R(76,52,280,22,'f-surf',11,'st1')}${T(90,68,'https://codial.uz',{a:'start',s:12,c:'tmono'})}
-  ${T(374,69,'☆',{s:18})}${T(436,69,'↓',{s:18})}
-  <rect x="40" y="160" width="300" height="10" rx="4" class="f-line"/><rect x="40" y="180" width="220" height="10" rx="4" class="f-line"/><rect x="40" y="200" width="260" height="10" rx="4" class="f-line"/>
+  ${R(76,52,280,22,'f-surf',11,'st1')}${T(90,68,'https://codial.uz',{a:'start',s:12,c:'tmono'})}<rect x="216" y="56" width="2" height="14" class="f-ink a-blink"/>
+  ${T(374,69,'☆',{s:18})}<g class="a-bob">${T(436,69,'↓',{s:18})}</g>
+  <rect x="40" y="160" width="300" height="10" rx="4" class="f-line a-in" style="--d:.3s"/><rect x="40" y="180" width="220" height="10" rx="4" class="f-line a-in" style="--d:.45s"/><rect x="40" y="200" width="260" height="10" rx="4" class="f-line a-in" style="--d:.6s"/>
   ${[[75,46,1],[43,84,2],[216,76,3],[374,84,4],[436,84,5]].map(([x,y,n])=>`<line x1="${x}" y1="${y}" x2="${x}" y2="${n===3?105:110}" class="lnm"/>${B(x,n===3?118:122,n)}`).join('')}`,'Brauzer qismlari');
 },
 email(){
@@ -370,19 +512,19 @@ email(){
   ${T(28,82,'Mavzu:',{a:'start',s:14,c:'tm'})}${T(90,82,'Uy vazifasi, Ali Valiyev, 7-sinf',{a:'start',s:14})}<line x1="20" y1="96" x2="460" y2="96" class="lnm"/>
   ${T(28,122,'Assalomu alaykum, ustoz!',{a:'start',s:14})}
   <rect x="28" y="134" width="300" height="8" rx="3" class="f-line"/><rect x="28" y="150" width="240" height="8" rx="3" class="f-line"/>
-  ${R(28,172,170,30,'f-soft',8,'st1')}<path d="M40 180h10l4 4v12h-14z" class="f-blue"/>${T(62,192,'Ali_birinchi.txt',{a:'start',s:12,c:'tmono'})}
-  <rect x="356" y="196" width="96" height="34" rx="17" class="f-blue"/>${T(404,218,'Yuborish',{s:14,c:'tb'})}
+  ${G('a-pop',.6,`${R(28,172,170,30,'f-soft',8,'st1')}<path d="M40 180h10l4 4v12h-14z" class="f-blue"/>${T(62,192,'Ali_birinchi.txt',{a:'start',s:12,c:'tmono'})}`)}
+  <g class="a-pulse" style="--d:1.5s"><rect x="356" y="196" width="96" height="34" rx="17" class="f-blue"/>${T(404,218,'Yuborish',{s:14,c:'tb'})}</g>
   ${B(452,40,1)}${B(452,78,2)}${B(452,138,3)}${B(214,186,4)}${B(336,212,5)}`,'Elektron xat qismlari');
 },
 page(){
   return S('0 0 360 440',`
-  ${R(20,10,320,420,'f-surf',4)}<rect x="60" y="40" width="250" height="362" class="dash"/>
-  <rect x="80" y="58" width="180" height="16" rx="3" class="f-ink"/>
-  <rect x="80" y="98" width="130" height="12" rx="3" class="f-blue"/>
-  ${[124,138,152,166].map(y=>`<rect x="80" y="${y}" width="${y===166?150:210}" height="6" rx="3" class="f-mut"/>`).join('')}
-  <rect x="80" y="186" width="210" height="60" class="f-soft st1"/><line x1="80" y1="206" x2="290" y2="206" class="ln"/><line x1="80" y1="226" x2="290" y2="226" class="ln"/><line x1="150" y1="186" x2="150" y2="246" class="ln"/><line x1="220" y1="186" x2="220" y2="246" class="ln"/>
-  <rect x="80" y="262" width="90" height="64" class="f-yel st1"/><path d="M84 320l22-26 16 16 12-10 32 20z" class="f-gr"/>
-  ${[268,282,296,310].map(y=>`<rect x="182" y="${y}" width="108" height="6" rx="3" class="f-mut"/>`).join('')}
+  ${R(20,10,320,420,'f-surf',4)}<rect x="60" y="40" width="250" height="362" class="dash a-march"/>
+  <rect x="80" y="58" width="180" height="16" rx="3" class="f-ink a-in" style="--d:.3s"/>
+  <rect x="80" y="98" width="130" height="12" rx="3" class="f-blue a-in" style="--d:.5s"/>
+  ${G('a-in',.7,[124,138,152,166].map(y=>`<rect x="80" y="${y}" width="${y===166?150:210}" height="6" rx="3" class="f-mut"/>`).join(''))}
+  ${G('a-in',.9,`<rect x="80" y="186" width="210" height="60" class="f-soft st1"/><line x1="80" y1="206" x2="290" y2="206" class="ln"/><line x1="80" y1="226" x2="290" y2="226" class="ln"/><line x1="150" y1="186" x2="150" y2="246" class="ln"/><line x1="220" y1="186" x2="220" y2="246" class="ln"/>`)}
+  ${G('a-pop',1.1,`<rect x="80" y="262" width="90" height="64" class="f-yel st1"/><path d="M84 320l22-26 16 16 12-10 32 20z" class="f-gr"/>`)}
+  ${G('a-in',1.2,[268,282,296,310].map(y=>`<rect x="182" y="${y}" width="108" height="6" rx="3" class="f-mut"/>`).join(''))}
   ${T(185,420,'3',{s:13,c:'tm'})}
   ${B(44,32,1)}${B(280,66,2)}${B(228,104,3)}${B(318,145,4)}${B(318,216,5)}${B(66,268,6)}${B(208,418,7)}`,'Word sahifasi tuzilishi');
 },
@@ -394,7 +536,10 @@ excel(){
   cols.forEach(([c,x,w])=>g+=`<rect x="${x}" y="48" width="${w}" height="24" class="f-soft st1"/>${T(x+w/2,65,c,{s:13})}`);
   rows.forEach((r,i)=>{const y=72+i*28;g+=`<rect x="10" y="${y}" width="40" height="28" class="f-soft st1"/>${T(30,y+19,i+1,{s:13})}`;
     cols.forEach(([c,x,w],j)=>{g+=`<rect x="${x}" y="${y}" width="${w}" height="28" class="f-surf st1"/>`;const v=r[j];if(v)g+=T(x+8,y+19,v,{a:'start',s:13,c:i===0?'t':(v==='Yiqildi'?'t':'tm')})});});
-  g+=`<rect x="170" y="212" width="100" height="28" class="f-none" style="stroke:var(--blue);stroke-width:4"/>`;
+  // B2:B5 range glows (what AVERAGE reads), then B6 result pulses
+  g+=`<rect x="172" y="102" width="96" height="108" class="f-blue a-glow soft"/><rect x="170" y="100" width="100" height="112" class="f-none a-march" style="stroke:var(--blue);stroke-width:2.5;stroke-dasharray:6 5"/>`;
+  g+=`<rect x="170" y="212" width="100" height="28" class="f-none a-pulse" style="stroke:var(--blue);stroke-width:4;--d:.4s"/>`;
+  g+=`<rect x="186" y="22" width="2" height="14" class="f-ink a-blink"/>`;
   return S('0 0 480 250',g,'Excel jadvali');
 },
 ifd(){
@@ -406,35 +551,52 @@ ifd(){
   ${T(100,138,"Yo'q",{s:15,c:'tm'})}${T(380,138,'Ha',{s:15,c:'tm'})}
   <rect x="20" y="174" width="130" height="44" rx="10" class="f-red"/>${T(85,202,'"Yiqildi"',{s:16,c:'tb'})}
   <rect x="330" y="174" width="130" height="44" rx="10" class="f-gr"/>${T(395,202,'"O\'tdi"',{s:16,c:'tb'})}
-  ${T(240,244,'=IF(C2>=60; "O\'tdi"; "Yiqildi")',{s:14,c:'tmono'})}`,'IF formulasi sxemasi');
+  ${T(240,244,'=IF(C2>=60; "O\'tdi"; "Yiqildi")',{s:14,c:'tmono'})}
+  ${[[85,'M240 27V110L395 182',0],[58,'M240 27V110L85 182',4]].map(([v,p,b])=>`
+  <g opacity="0"><circle r="15" class="f-blue st1"/><text y="5" text-anchor="middle" font-size="13" class="tb">${v}</text>
+   <animateMotion path="${p}" dur="8s" begin="${b}s" repeatCount="indefinite" keyPoints="0;0;.33;.33;1;1" keyTimes="0;.05;.2;.3;.45;1" calcMode="linear"/>
+   <animate attributeName="opacity" values="0;1;1;0;0" keyTimes="0;.05;.45;.5;1" dur="8s" begin="${b}s" repeatCount="indefinite"/></g>`).join('')}`,'IF formulasi sxemasi');
 },
 chart(){
   const d=[['Ali',85],['Laylo',92],['Jasur',58],['Madina',74]];const y=v=>210-v*1.9;
   let g='';[0,25,50,75,100].forEach(v=>g+=`<line x1="56" y1="${y(v)}" x2="460" y2="${y(v)}" class="lnm" style="stroke-dasharray:none;opacity:.45"/>${T(48,y(v)+5,v,{a:'end',s:12,c:'tm'})}`);
-  d.forEach(([n,v],i)=>{const x=80+i*96;g+=`<rect x="${x}" y="${y(v)}" width="60" height="${v*1.9}" rx="4" class="${v<60?'f-red':'f-blue'}"/>${T(x+30,y(v)-7,v,{s:14})}${T(x+30,232,n,{s:14,c:'tm'})}`});
-  g+=`<line x1="56" y1="${y(60)}" x2="460" y2="${y(60)}" class="lred"/>${T(458,y(60)-6,"o'tish bali: 60",{a:'end',s:12,c:'tm'})}`;
+  d.forEach(([n,v],i)=>{const x=80+i*96,dl=(.3+i*.2).toFixed(2);g+=`<rect x="${x}" y="${y(v)}" width="60" height="${v*1.9}" rx="4" class="${v<60?'f-red':'f-blue'} a-grow" style="--d:${dl}s"/>${G('a-fade',(+dl+.7).toFixed(2),T(x+30,y(v)-7,v,{s:14}))}${T(x+30,232,n,{s:14,c:'tm'})}`});
+  g+=`<line x1="56" y1="${y(60)}" x2="460" y2="${y(60)}" class="lred a-march"/>${G('a-fade',1.6,T(458,y(60)-6,"o'tish bali: 60",{a:'end',s:12,c:'tm'}))}`;
   return S('0 0 480 245',g,'Baholar ustunli diagrammasi');
 },
 slides(){
   let bad='';for(let i=0;i<12;i++)bad+=`<rect x="24" y="${44+i*8}" width="${180-(i%3)*22}" height="4" rx="2" class="f-mut"/>`;
   return S('0 0 480 200',`
-  ${R(10,14,214,130,'f-surf',6)}<rect x="24" y="26" width="70" height="7" rx="2" class="f-ink"/>${bad}
-  ${R(256,14,214,130,'f-surf',6)}<rect x="272" y="30" width="120" height="14" rx="3" class="f-ink"/>
+  ${G('a-pop',.2,`${R(10,14,214,130,'f-surf',6)}<rect x="24" y="26" width="70" height="7" rx="2" class="f-ink"/>${bad}`)}
+  ${G('a-pop',.7,`${R(256,14,214,130,'f-surf',6)}<rect x="272" y="30" width="120" height="14" rx="3" class="f-ink"/>
   <rect x="272" y="58" width="86" height="70" class="f-yel st1"/><path d="M276 124l20-24 14 14 12-10 32 20z" class="f-gr"/>
-  <rect x="370" y="66" width="86" height="8" rx="3" class="f-mut"/><rect x="370" y="88" width="70" height="8" rx="3" class="f-mut"/><rect x="370" y="110" width="80" height="8" rx="3" class="f-mut"/>
-  <circle cx="117" cy="170" r="13" class="f-red"/>${T(117,176,'✕',{s:14,c:'tb'})}${T(117,197,"Matn ko'p va mayda",{s:13,c:'tm'})}
-  <circle cx="363" cy="170" r="13" class="f-gr"/>${T(363,176,'✓',{s:15,c:'tb'})}${T(363,197,'1 fikr, rasm, kam matn',{s:13,c:'tm'})}`,'Yomon va yaxshi slayd');
+  <rect x="370" y="66" width="86" height="8" rx="3" class="f-mut"/><rect x="370" y="88" width="70" height="8" rx="3" class="f-mut"/><rect x="370" y="110" width="80" height="8" rx="3" class="f-mut"/>`)}
+  <g class="a-pulse" style="--d:1s"><circle cx="117" cy="170" r="13" class="f-red"/>${T(117,176,'✕',{s:14,c:'tb'})}</g>${T(117,197,"Matn ko'p va mayda",{s:13,c:'tm'})}
+  <g class="a-pulse" style="--d:1.9s"><circle cx="363" cy="170" r="13" class="f-gr"/>${T(363,176,'✓',{s:15,c:'tb'})}</g>${T(363,197,'1 fikr, rasm, kam matn',{s:13,c:'tm'})}`,'Yomon va yaxshi slayd');
 },
 backup(){
   const file=(x,y)=>`<path d="M${x} ${y}h16l6 6v22h-22z" class="f-blue st1"/>`;
   return S('0 0 480 220',`
   ${T(240,24,'3 nusxa · 2 xil qurilma · 1 tasi uydan tashqarida',{s:15})}
   ${R(40,60,100,70,'f-soft',8)}<rect x="80" y="130" width="20" height="14" class="f-mut"/>${R(62,142,56,8,'f-mut',3)}${file(79,80)}
-  ${R(212,74,56,44,'f-soft',8)}<rect x="226" y="62" width="28" height="12" class="f-mut"/>${file(229,82)}
-  <path d="M362 128a24 24 0 0 1 4-46a32 32 0 0 1 60-4a24 24 0 0 1 16 50z" class="f-soft st"/>${file(392,92)}
+  ${R(212,74,56,44,'f-soft',8)}<rect x="226" y="62" width="28" height="12" class="f-mut"/>${G('a-pop',1.2,file(229,82))}
+  <path d="M362 128a24 24 0 0 1 4-46a32 32 0 0 1 60-4a24 24 0 0 1 16 50z" class="f-soft st"/>${G('a-pop',2,file(392,92))}
+  <path d="M146 96H204" class="dash a-march"/><path d="M146 84C220 30 300 30 360 84" class="dash a-march"/>
   ${T(90,176,'1-nusxa',{s:15})}${T(90,196,'Kompyuter',{s:13,c:'tm'})}
-  ${T(240,176,'2-nusxa',{s:15})}${T(240,196,'Fleshka',{s:13,c:'tm'})}
-  ${T(400,176,'3-nusxa',{s:15})}${T(400,196,'Bulut (Google Drive)',{s:13,c:'tm'})}`,'3-2-1 zaxira qoidasi');
+  ${G('a-in',1.2,T(240,176,'2-nusxa',{s:15})+T(240,196,'Fleshka',{s:13,c:'tm'}))}
+  ${G('a-in',2,T(400,176,'3-nusxa',{s:15})+T(400,196,'Bulut (Google Drive)',{s:13,c:'tm'}))}`,'3-2-1 zaxira qoidasi');
+},
+ramdisk(){
+  // looping story: things open in RAM -> power off -> RAM empties, disk keeps files
+  const item=(x,i)=>`<rect x="${x}" y="58" width="34" height="40" rx="5" class="f-or st1 a-ram" style="--d:${(i*.35).toFixed(2)}s"/>`;
+  const dfile=x=>`<path d="M${x} 56h20l8 8v34h-28z" class="f-blue st1"/>`;
+  return S('0 0 480 150',`
+  <g class="a-dim">${R(14,30,200,86,'f-soft',10)}${item(36,0)}${item(84,1)}${item(132,2)}</g>
+  ${T(114,22,'RAM: oshxona stoli',{s:14})}
+  ${R(266,30,200,86,'f-soft',10)}${dfile(292)}${dfile(338)}${dfile(384)}${dfile(430-4)}
+  ${T(366,22,'Disk: muzlatkich',{s:14})}
+  <g class="a-off"><rect x="150" y="50" width="180" height="46" rx="23" class="f-ink"/>${T(240,79,"⚡ Kompyuter o'chdi",{s:14,c:'tinv'})}</g>
+  ${T(114,138,"o'chsa bo'shaydi",{s:13,c:'tm'})}${T(366,138,'fayllar saqlanib qoladi',{s:13,c:'tm'})}`,'RAM va disk farqi: kompyuter o\'chganda RAM bo\'shaydi, disk saqlaydi');
 }
 };
 
@@ -455,7 +617,7 @@ const LESSONS=[
  {b:'hand',t:"Kompyuter nimalardan iborat?",x:ol(["<b>Monitor</b>: hamma narsani ko'rsatadi","<b>Tizim bloki</b>: kompyuterning “miyasi” shu yerda","<b>Klaviatura</b>: harf va buyruqlarni yozamiz","<b>Sichqoncha</b>: ko'rsatamiz va bosamiz"])+`<p class="lead">Noutbukda hammasi bitta korpusda, sichqoncha o'rnida sensorli panel (touchpad) bor.</p>`,d:D.computer(),
   n:"Iloji bo'lsa, ochiq tizim blokini yoki eski qismlarni qo'lda ko'rsating. Bolalar ko'rgan narsani yaxshi eslab qoladi."},
  {b:'hand',t:"Kompyuter qanday ishlaydi?",x:ul(["<b>Protsessor</b> = oshpaz: hamma ishni tez bajaradi","<b>Operativ xotira (RAM)</b> = oshxona stoli: hozir ochiq narsalar turadi. O'chirsangiz, stol tozalanadi","<b>Disk</b> = muzlatkich: fayllar o'chirilganda ham saqlanib qoladi"]),
-  d:flow([{t:"Kiritish",d:"klaviatura, sichqoncha",c:'c-bl'},{t:"Ishlov berish",d:"protsessor + RAM",c:'c-or'},{t:"Chiqarish",d:"monitor, karnay, printer",c:'c-gr'}])+`<div style="margin-top:.6em">${flow([{t:"Saqlash",d:"disk: fayllar doimiy turadi"}])}</div>`,
+  d:flow([{t:"Kiritish",d:"klaviatura, sichqoncha",c:'c-bl'},{t:"Ishlov berish",d:"protsessor + RAM",c:'c-or'},{t:"Chiqarish",d:"monitor, karnay, printer",c:'c-gr'}])+`<div style="margin-top:.8em">${D.ramdisk()}</div>`,
   n:"Oshxona o'xshatishini so'rab tekshiring: “Kompyuterni o'chirsak, stol (RAM) dagi ovqat nima bo'ladi?”"},
  {b:'hand',t:"Operatsion tizim nima?",x:ul(["Operatsion tizim (OT) kompyuterni boshqaradi: dasturlar va qurilmalar orasida “tarjimon”","Bizda <b>Windows 10/11</b>","Boshqa OT: macOS (Apple), Linux, telefonda Android va iOS"]),
   d:`<div class="stack">
@@ -476,7 +638,7 @@ const LESSONS=[
   d:cmp({c:'good',h:"AI qila oladi",i:["Matn yozish va tushuntirish","Savolga javob berish","Tarjima qilish","Rasm chizish"]},{c:'bad',h:"AI qila olmaydi",i:["Kompyuteringizni yoqish","Faylingizni saqlash va topish","Papkalaringizni tartiblash","Siz uchun tekshirish va javob berish"]}),
   n:"ChatGPT ga “Kompyuter nima? 10 yoshli bolaga 3 gapda tushuntir” deb yozib, ekranda ko'rsating. AI bilan to'liq ishlash 4–5-darslarda."},
  {b:'quiz',q:"Kompyuterni o'chirsak, qaysi xotiradagi narsa yo'qoladi?",o:["Disk","Operativ xotira (RAM)","Fleshka"],a:1,w:"RAM faqat kompyuter yoniqligida ishlaydi. Shuning uchun ishni diskka saqlash kerak (Ctrl + S)."},
- {b:'quiz',q:"Ochiq oynalar orasida tez almashish uchun qaysi tugmalar?",o:["Ctrl + C","Alt + Tab","Win + L"],a:1,w:"Alt ni ushlab turib Tab ni bosing. Win + L esa kompyuterni qulflaydi."},
+ {b:'quiz',q:"Ochiq oynalar orasida tez almashish uchun qaysi tugmalar?",o:["Alt + Tab","Ctrl + C","Win + L"],a:0,w:"Alt ni ushlab turib Tab ni bosing. Win + L esa kompyuterni qulflaydi."},
  {b:'task',t:"Amaliyot: Windows topshiriqlari",x:ol(["Bloknot va Kalkulyatorni Start orqali oching","Ikkalasini Win + ← va Win + → bilan yonma-yon qo'ying","Tilni o'zbekchaga almashtiring","Bloknotga o'zingiz haqingizda 3 gap yozing","Ism_birinchi.txt nomi bilan ish stoliga saqlang","keybr.com saytida 5 daqiqa yozing va tezligingizni daftarga yozing"]),
   n:"Boshlang'ich yozish tezligini (so'z/daqiqa) jurnalga yozing: 12-darsda solishtiriladi va baholashning 10% ini tashkil qiladi."},
  {b:'home',t:"Uy vazifasi",x:ul(["Har kuni 10 daqiqa yozish mashqi (keybr.com yoki monkeytype.com)","Uydagi kompyuterda ish stoli fonini o'zgartiring (Win + I → Shaxsiylashtirish)","Kompyuter qismlarini oilangizga tushuntirib bering"])}
@@ -487,11 +649,11 @@ const LESSONS=[
  today:["Fayl va papka","Explorer","Kengaytmalar","Nomlash","Nusxa olish","Savat"],
  s:[
  {b:'hand',t:"Fayl va papka nima?",x:ul(["<b>Fayl</b>: bitta ish (matn, rasm, qo'shiq, video)","<b>Papka</b>: fayllar uchun quti, xuddi jild kabi","Papka ichida yana papka bo'lishi mumkin","Har faylning manzili bor:<br><code style=\"font-family:var(--f-mono);font-size:.85em\">D:\\Codial_Ali\\02_Fayllar\\vazifa.docx</code>"]),
-  d:D.tree([[0,'D: disk','d'],[1,'Codial_Ali','d'],[2,'01_Windows','d'],[3,'Ali_birinchi.txt','f'],[2,'02_Fayllar','d'],[3,'vazifa.docx','f',1],[2,'03_Internet','d']],'Papkalar daraxti')},
+  d:D.tree([[0,'D: disk','d'],[1,'Codial_Ali','d'],[2,'01_Windows','d'],[3,'Ali_birinchi.txt','f'],[2,'02_Fayllar','d'],[3,'vazifa.docx','f',1],[2,'04_Internet','d']],'Papkalar daraxti')},
  {b:'hand',t:"Explorer (Provodnik)",x:`<p>Ochish: <kbd>Win</kbd>+<kbd>E</kbd></p>`+ol(["<b>Manzil satri</b>: hozir qaysi papkadasiz","<b>Chap panel</b>: Ish stoli, Yuklamalar, disklar","<b>Fayllar</b>: papka ichidagilar","<b>Qidiruv</b>: fayl nomini yozib toping"]),d:D.explorer()},
  {b:'hand',t:"Fayl turlari (kengaytma)",x:ul(["Kengaytma: nuqtadan keyingi qism, masalan <b>.docx</b>","Ko'rsatish: Explorer → Ko'rinish → <b>Fayl kengaytmalari</b> ✓","Kengaytmani o'zgartirmang: fayl ochilmay qoladi","<b>.exe</b> faylni notanish joydan ochmang: virus bo'lishi mumkin"]),d:D.ext()},
  {b:'hand',t:"Yaxshi nom, yomon nom",x:`<p>Qoida: <b>Sana_Ism_Mavzu</b>. Bo'sh joy o'rniga pastki chiziq _ ishlating.</p><p class="lead">Nomda bu belgilar bo'lmaydi: \\ / : * ? " &lt; &gt; |</p>`,
-  d:cmp({c:'bad',h:"Yomon",i:["Yangi papka (3)","document1.docx","oxirgi_oxirgi2.docx","rasm.jpg"]},{c:'good',h:"Yaxshi",i:["01_Windows","2026-10-20_Ali_Referat.docx","Ali_Baholar_7-sinf.xlsx","Ali_Sport_taqdimot.pptx"]})},
+  d:cmp({c:'bad',h:"Yomon",i:["Yangi papka (3)","document1.docx","oxirgi_oxirgi2.docx","rasm.jpg"]},{c:'good',h:"Yaxshi",i:["01_Windows","2026-10-20_Ali_Referat.docx","2026-10-22_Ali_Baholar.xlsx","2026-10-27_Ali_Sport.pptx"]})},
  {b:'hand',t:"Nusxa olish va ko'chirish",x:keys([["Ctrl+C","Nusxa olish"],["Ctrl+X","Kesib olish"],["Ctrl+V","Qo'yish"],["F2","Qayta nomlash"],["Ctrl+Shift+N","Yangi papka"],["Ctrl+Z","Bekor qilish"]]),d:D.copyMove()},
  {b:'hand',t:"O'chirish va Savat",full:1,x:flow([{t:"Delete",d:"faylni tanlab bosing"},{t:"Savat",d:"fayl hali bor",c:'c-or'},{t:"Tiklash",d:"o'ng tugma → Tiklash",c:'c-gr'}]),
   d:`<div class="warn"><b>Ehtiyot:</b> <kbd>Shift</kbd>+<kbd>Delete</kbd> faylni Savatsiz, butunlay o'chiradi. Savatni tozalagandan keyin ham fayl qaytmaydi.</div>`},
@@ -499,7 +661,7 @@ const LESSONS=[
   d:keys([["Win+S","Kompyuter bo'yicha qidiruv"],["Ctrl+F","Papka ichida qidiruv"],["Alt+↑","Bir papka yuqoriga"]])},
  {b:'ai',t:"AI reja beradi, siz bajarasiz",full:1,x:prompt("Men 7-sinf o'quvchisiman. Maktab va kurs fayllarim uchun oddiy papka tuzilmasini taklif qil. Ko'pi bilan 6 ta papka, nomlari o'zbekcha va raqam bilan boshlansin."),
   d:`<p>AI ro'yxat beradi. Lekin papkalarni <b>Explorerda o'zingiz yaratasiz</b>: AI kompyuteringiz ichiga kira olmaydi.</p>`,n:"Bir nechta o'quvchining AI javobini solishtiring: hamma har xil javob oladi. Bu AI ning odatiy xususiyati ekanini tushuntiring."},
- {b:'quiz',q:"Qaysi fayl nomi eng to'g'ri?",o:["yangi document (2).docx","2026-10-20_Ali_Referat.docx","referat/oxirgi?.docx"],a:1,w:"Sana, ism va mavzu bor, taqiqlangan belgilar yo'q. Uchinchi nomda / va ? bor: Windows bunday nomni qabul qilmaydi."},
+ {b:'quiz',q:"Qaysi fayl nomi eng to'g'ri?",o:["yangi document (2).docx","referat/oxirgi?.docx","2026-10-20_Ali_Referat.docx"],a:2,w:"Sana, ism va mavzu bor, taqiqlangan belgilar yo'q. Ikkinchi nomda / va ? bor: Windows bunday nomni qabul qilmaydi."},
  {b:'quiz',q:"Shift + Delete nima qiladi?",o:["Faylni Savatga tashlaydi","Faylni butunlay o'chiradi","Faylning nusxasini oladi"],a:1,w:"Shift + Delete Savatni chetlab o'tadi. Faqat ishonchingiz komil bo'lsa ishlating."},
  {b:'task',t:"Amaliyot: tartibsiz papka (10 daqiqa)",x:ol(["O'qituvchi bergan “Tartibsiz” papkasini oching (50 ta aralash fayl)","Rasmlar, Hujjatlar, Jadvallar, Arxivlar papkalarini yarating","Fayllarni turiga qarab ko'chiring (kengaytmaga qarang)","3 ta yomon nomli faylni qoidaga ko'ra qayta nomlang","Savatdan “muhim.docx” faylini tiklang","D: diskda <b>Codial_Ism</b> papkasini yarating: kurs davomidagi hamma ish shu yerda bo'ladi"]),
   n:"Har dars oxirida Codial_Ism papkasini tekshiring: tartib baholashning 20% ini tashkil qiladi."},
@@ -511,7 +673,7 @@ const LESSONS=[
  today:["12 ta tugma","Skrinshot","Dastur o'rnatish","Fleshka","Arxiv","Chop etish"],
  s:[
  {b:'hand',t:"Eng kerakli 12 ta tugma",full:1,x:keys([["Ctrl+C","Nusxa olish"],["Ctrl+V","Qo'yish"],["Ctrl+X","Kesish"],["Ctrl+Z","Bekor qilish"],["Ctrl+S","Saqlash"],["Ctrl+A","Hammasini belgilash"],["Ctrl+F","Qidirish"],["Alt+Tab","Oyna almashish"],["Win+E","Explorer"],["Win+D","Ish stoli"],["Win+Shift+S","Ekran rasmi"],["Win+V","Bufer tarixi"]]),
-  n:"Har bir tugmani bir martadan birga bajaring. Keyin darsning oxiridagi musobaqada so'raladi."},
+  n:"Har bir tugmani bir martadan birga bajaring. Keyin darsning oxiridagi musobaqada so'raladi. Win + V birinchi marta bosilganda “Yoqish” tugmasini bosish kerak bo'ladi."},
  {b:'hand',t:"Ekran rasmi (skrinshot)",full:1,x:flow([{t:"Win + Shift + S",c:'c-bl'},{t:"Sohani belgilang",d:"sichqoncha bilan torting"},{t:"Ctrl + V",d:"Word, Telegram yoki Paint ga qo'ying",c:'c-gr'}]),
   d:`<p class="lead">Yoki ekran burchagida chiqqan xabarni bosib, rasmni fayl qilib saqlang. Butun ekran: <kbd>PrtSc</kbd>.</p>`},
  {b:'hand',t:"Dastur o'rnatish: xavfsiz yo'l",full:1,x:cmp({c:'good',h:"To'g'ri",i:["Rasmiy sayt: google.com/chrome, microsoft.com","Microsoft Store","O'qituvchi yoki ota-ona ruxsati bilan"]},{c:'bad',h:"Xavfli",i:["“Bepul yuklab ol, crack, keygen” saytlari","Reklamadagi katta “Download” tugmalari","Telegramdan kelgan notanish .exe fayl"]}),
@@ -524,7 +686,7 @@ const LESSONS=[
   d:`<p class="lead">Qog'ozni tejang: chop etishdan oldin ekranda tekshiring. Ko'p hollarda PDF qilib yuborish kifoya.</p>`},
  {b:'ai',t:"Muammoni AI ga to'g'ri tushuntirish",full:1,x:prompt("fleshka ishlamayapti","Yomon prompt","bad")+`<div style="height:.5em"></div>`+prompt("Windows 11. Fleshkani ulaganimda ovoz chiqadi, lekin Explorerda ko'rinmaydi. Qadamma-qadam, oddiy tilda nima qilay? Skrinshot ilova qildim.","Yaxshi prompt","ans"),
   d:`<p>AI qadamlarni aytadi, <b>bajarish sizning qo'lingizda</b>. Har qadamdan keyin natijani tekshiring.</p>`},
- {b:'quiz',q:"Fleshkani sug'urishdan oldin nima qilish kerak?",o:["Kompyuterni o'chirish","“Xavfsiz chiqarish” ni bosish","Hech narsa"],a:1,w:"Xavfsiz chiqarish yozish jarayoni tugaganini tekshiradi. Shunda fayllar buzilmaydi."},
+ {b:'quiz',q:"Fleshkani sug'urishdan oldin nima qilish kerak?",o:["Kompyuterni o'chirish","Hech narsa","“Xavfsiz chiqarish” ni bosish"],a:2,w:"Xavfsiz chiqarish yozish jarayoni tugaganini tekshiradi. Shunda fayllar buzilmaydi."},
  {b:'task',t:"Amaliyot: musobaqa va fleshka",x:ol(["Tezkor tugmalar musobaqasi: o'qituvchi aytadi, birinchi bajargan ball oladi (15 savol)","Codial_Ism papkangizni ZIP qiling","ZIP faylni fleshkaga ko'chiring","Fleshkani xavfsiz chiqaring","Win + Shift + S bilan ish stolingiz skrinshotini olib, Paint ga qo'ying va saqlang"])},
  {b:'home',t:"Uy vazifasi",x:ul(["AI dan Windows tezkor tugmalari ro'yxatini so'rang","Eng kerakli 15 tasini tanlab, Bloknotda o'zingiz tartiblang: Tugmalar_Ism.txt","Uyda har kuni kamida 3 tasini ishlating"])}
  ]},
@@ -546,8 +708,9 @@ const LESSONS=[
  {b:'hand',t:"Gmail: xat yuborish",x:ol(["<b>Kimga</b>: manzilni xatosiz yozing","<b>Mavzu</b>: har doim yozing","<b>Matn</b>: salom, qisqa mazmun, ism","<b>Biriktirish</b>: faylni qo'shing","<b>Yuborish</b>"]),d:D.email()},
  {b:'ai',t:"Google va AI: qachon qaysi?",full:1,x:cmp({c:'blue',h:"Google",i:["Saytlar ro'yxatini beradi","Manbani o'zingiz tanlaysiz","Yangilik, narx, raqam, rasmiy ma'lumot uchun"]},{c:'orange',h:"AI (ChatGPT, Gemini)",i:["Tayyor tushuntirish beradi","Tez, lekin xato qilishi mumkin","G'oya, reja, tushuntirish, matn uchun"]})},
  {b:'ai',t:"AI bilan birinchi suhbat",x:ol(["<b>chatgpt.com</b> yoki <b>gemini.google.com</b> ni oching","Google akkaunt bilan kiring","“Yangi suhbat” ni bosing","Savolingizni yozing","Javobni o'qing va davom ettiring: “soddaroq tushuntir”"]),
-  d:`<div class="warn"><b>Yosh chegarasi:</b> ko'p AI xizmatlari 13 yoshdan, ota-ona ruxsati bilan. 13 yoshgacha bo'lganlar o'qituvchi akkaunti orqali guruh bilan ishlaydi.</div>`},
- {b:'quiz',q:"Faqat PDF fayllarni topish uchun nima qo'shamiz?",o:["site:pdf","filetype:pdf","\"pdf\""],a:1,w:"filetype: buyrug'i fayl turini tanlaydi. site: esa saytni tanlaydi."},
+  d:`<div class="warn"><b>Yosh chegarasi:</b> ko'p AI xizmatlari 13 yoshdan, ota-ona ruxsati bilan. 13 yoshgacha bo'lganlar o'zi akkaunt ochmaydi: o'qituvchi o'z akkauntini ekranga chiqaradi, bolalar promptni aytadi yoki navbat bilan yozadi.</div>`,
+  n:"13 yoshgacha o'quvchilar uchun Google akkaunt faqat ota-ona Family Link orqali ochadi. Darsdan oldin kimda akkaunt borligini aniqlab oling va akkauntsizlarni juftlikka qo'ying."},
+ {b:'quiz',q:"Faqat PDF fayllarni topish uchun nima qo'shamiz?",o:["filetype:pdf","site:pdf","\"pdf\""],a:0,w:"filetype: buyrug'i fayl turini tanlaydi. site: esa saytni tanlaydi."},
  {b:'task',t:"Amaliyot: bir savol, ikki yo'l",x:ol(["Savol: “O'zbekistonda nechta viloyat bor va maydoni eng kattasi qaysi?”","Google'dan javob toping, manba saytini yozib oling","Xuddi shu savolni AI ga bering","Javoblarni solishtiring: farq bormi?","Javob va manbani Bloknotga yozib, Codial_Ism/04_Internet ga saqlang"]),
   n:"To'g'ri javob: 12 ta viloyat, Qoraqalpog'iston Respublikasi va Toshkent shahri; viloyatlar orasida eng kattasi Navoiy viloyati. AI ba'zan Respublikani “viloyat” deb hisoblaydi: shu farqni muhokama qiling."},
  {b:'home',t:"Uy vazifasi",x:ul(["O'qituvchiga Gmail orqali xat yuboring: mavzu, salom, Ism_birinchi.txt biriktirilgan","Brauzerda 3 ta foydali saytni xatcho'pga qo'shing"])}
@@ -571,8 +734,8 @@ const LESSONS=[
  {b:'ai',t:"Javobni qanday tekshiramiz?",full:1,x:flow([{t:"AI javobi",c:'c-bl'},{t:"2 ta manbada tekshiring",d:"Google, darslik, rasmiy sayt"},{t:"Mos keldimi?"},{t:"Ha: ishlating",c:'c-gr'},{t:"Yo'q: qayta so'rang yoki manbaga ishoning",c:'c-rd'}])},
  {b:'ai',t:"AI ga nimani bermaymiz",x:`<p>AI bilan suhbat internetga yuboriladi. Shaxsiy ma'lumotni yozmang.</p>`,
   d:cmp({c:'bad',h:"Hech qachon",i:["Parollar va SMS kodlar","Pasport yoki ID raqami","Bank karta raqami","Uy manzili va telefon","Boshqalarning rasmi va sirlari"]},{c:'good',h:"Mumkin",i:["Dars mavzusi","Umumiy savollar","O'zingiz yozgan matn","Shaxsiy ma'lumotsiz jadval"]})},
- {b:'quiz',q:"Qaysi prompt yaxshiroq?",o:["Matematika","Kasrlarni qo'shishni 6-sinf o'quvchisiga 3 ta misol bilan tushuntir","Menga yordam ber"],a:1,w:"Ikkinchi promptda vazifa, kontekst (6-sinf) va format (3 ta misol) bor."},
- {b:'quiz',q:"AI aytgan sanaga qanday ishonch hosil qilamiz?",o:["AI dan yana bir marta so'raymiz","2 ta ishonchli manbada tekshiramiz","Ishonamiz, AI aqlli"],a:1,w:"AI o'z xatosini takrorlashi mumkin. Mustaqil manba kerak."},
+ {b:'quiz',q:"Qaysi prompt yaxshiroq?",o:["Matematika","Menga yordam ber","Kasrlarni qo'shishni 6-sinf o'quvchisiga 3 ta misol bilan tushuntir"],a:2,w:"Uchinchi promptda vazifa, kontekst (6-sinf) va format (3 ta misol) bor."},
+ {b:'quiz',q:"AI aytgan sanaga qanday ishonch hosil qilamiz?",o:["2 ta ishonchli manbada tekshiramiz","AI dan yana bir marta so'raymiz","Ishonamiz, AI aqlli"],a:0,w:"AI o'z xatosini takrorlashi mumkin. Mustaqil manba kerak."},
  {b:'task',t:"Amaliyot: 5 ta prompt",x:ol(["R-V-K-F bo'yicha 5 ta prompt yozing: dars mavzusi, tug'ilgan kun tabrigi, so'z yodlash rejasi, sport mashqi, kitob tavsiyasi","Juftlikda bir-biringiz promptini 1–4 ball bilan baholang (har harf 1 ball)","O'qituvchi bergan AI javobidagi 2 ta xatoni toping va manbasini ko'rsating"]),
   n:"Xato javob uchun oldindan 2 ta noto'g'ri fakt qo'shilgan matn tayyorlang (masalan, sana va shahar nomi)."},
  {b:'home',t:"Uy vazifasi",x:ul(["“Mening 10 ta promptim.txt” faylini tuzing: o'qish, sport, hobbi uchun foydali promptlar","Faylni Codial_Ism/05_AI papkasiga saqlang"])}
@@ -607,7 +770,7 @@ const LESSONS=[
   d:`<p>Ishning yarmini AI qiladi, qolgan yarmi sizniki. Baho ham shu yarim uchun qo'yiladi.</p>`},
  {b:'ai',t:"Referat uchun prompt",full:1,x:prompt("Sen 8-sinf tarix o'qituvchisisan. “Amir Temur davrida ilm-fan” mavzusida referat rejasini tuz: kirish, 3 bob, xulosa. Har bobga 3 ta asosiy fikr. O'zbek lotin alifbosida.")+`<div style="height:.5em"></div>`+prompt("Endi 1-bobni 250 so'zda yoz. 13 yoshli o'quvchi tiliga mos bo'lsin.","Keyingi prompt"),
   d:`<p class="lead">Bir yo'la butun referatni so'ramang: bob-bob yozdirsangiz, sifat yaxshiroq bo'ladi.</p>`},
- {b:'hand',t:"AI matnini Word ga to'g'ri ko'chirish",x:ul(["<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>V</kbd> yoki “Faqat matnni saqlash”","Ortiqcha ** va # belgilarni o'chiring","Sarlavhalarga stil bering","Imlo tekshiruvi: qizil chiziqlarni ko'rib chiqing"]),
+ {b:'hand',t:"AI matnini Word ga to'g'ri ko'chirish",x:ul(["<kbd>Ctrl</kbd>+<kbd>V</kbd>, keyin chiqqan kichik menyudan <b>“Faqat matnni saqlash”</b>","Ortiqcha ** va # belgilarni o'chiring","Sarlavhalarga stil bering","Imlo tekshiruvi: qizil chiziqlarni ko'rib chiqing"]),
   d:cmp({c:'bad',h:"Ko'chirilgandek",i:["**Kirish**","## 1-bob","Har xil shrift va fon"]},{c:'good',h:"Tozalangan",i:["Kirish (Sarlavha 1)","1-bob (Sarlavha 1)","Bir xil Times New Roman 14"]})},
  {b:'hand',t:"Avtomatik mundarija",full:1,x:flow([{t:"Sarlavhalarga stil",c:'c-bl'},{t:"Havolalar"},{t:"Mundarija → Avtomatik"},{t:"O'zgarsa: Jadvalni yangilash",c:'c-gr'}]),
   d:`<p class="lead">Sahifa raqamlari mundarijada o'zi chiqadi. Qo'lda raqam yozmang.</p>`},
@@ -615,7 +778,7 @@ const LESSONS=[
   d:`<div class="warn"><b>Diqqat:</b> AI mavjud bo'lmagan kitob va saytlarni “manba” qilib to'qishi mumkin. Har birini topib tekshiring.</div>`},
  {b:'ai',t:"Rezyume: AI tuzilma beradi, ma'lumot sizniki",x:prompt("Men 15 yoshdaman, kompyuter savodxonligi kursini tugatyapman. Yozgi amaliyot uchun bir sahifali rezyume tuzilmasini ber: qaysi bo'limlar va har birida nima yozish kerak."),
   d:ul(["AI <b>tuzilma</b> beradi: bo'limlar va maslahatlar","Ma'lumotni <b>o'zingiz</b> yozasiz: ism, ko'nikma, yutuq","Bilmagan narsangizni hech qachon yozmang"])},
- {b:'quiz',q:"AI bergan manbalar ro'yxati bilan nima qilamiz?",o:["Shundayligicha ko'chirib qo'yamiz","Har birini topib tekshiramiz","O'chirib tashlaymiz"],a:1,w:"Ba'zi manbalar haqiqiy, ba'zilari to'qilgan bo'lishi mumkin. Topilganini qoldiring."},
+ {b:'quiz',q:"AI bergan manbalar ro'yxati bilan nima qilamiz?",o:["Shundayligicha ko'chirib qo'yamiz","O'chirib tashlaymiz","Har birini topib tekshiramiz"],a:2,w:"Ba'zi manbalar haqiqiy, ba'zilari to'qilgan bo'lishi mumkin. Topilganini qoldiring."},
  {b:'task',t:"Amaliyot: referat (2–3 sahifa)",x:ol(["Mavzu tanlang va AI bilan reja tuzing","Bob-bob matn oling, o'z so'zlaringiz bilan tahrirlang","Titul varag'i, avtomatik mundarija, 3 bob, xulosa","Tekshirilgan manbalar ro'yxati va sahifa raqamlari","2026-10-xx_Ism_Referat nomi bilan .docx va .pdf"]),
   n:"Har o'quvchidan AI javobida topgan kamida bitta xatosini so'rang. Bu yakuniy loyihadagi promptlar.txt uchun ham kerak bo'ladi."},
  {b:'home',t:"Uy vazifasi",x:ul(["Referatni tugating","PDF nusxasini Gmail orqali o'qituvchiga yuboring (mavzu va salom bilan)"])}
@@ -658,7 +821,7 @@ const LESSONS=[
  {b:'hand',t:"AI formulasini tekshirish",x:`<ul class="checks"><li>2–3 katakni o'zingiz hisoblab solishtiring</li><li>Chegaradagi qiymatni sinang: aynan 60</li><li>Bo'sh katakda nima chiqadi?</li><li><b>#NAME?</b> yoki <b>#VALUE!</b> chiqsa, xatoni AI ga ko'rsating</li></ul>`,
   d:`<div class="warn"><b>Eslab qoling:</b> AI formulasi ham xato bo'lishi mumkin. Masalan, &gt;= o'rniga &gt; yozsa, aynan 60 ball olgan o'quvchi “Yiqildi” bo'lib qoladi.</div>`},
  {b:'hand',t:"Diagramma",x:ul(["Ma'lumotni belgilang → Qo'shish → <b>Diagramma</b>","<b>Ustunli</b>: solishtirish","<b>Chiziqli</b>: vaqt bo'yicha o'zgarish","<b>Doiraviy</b>: butunning qismlari","Sarlavha va o'q nomlarini yozing"]),d:D.chart()},
- {b:'quiz',q:"Formulani pastga tortganda F1 katak o'zgarmasligi uchun nima yozamiz?",o:["F1","$F$1","\"F1\""],a:1,w:"$ belgisi ustun va qatorni qotiradi. F4 tugmasi buni tez qiladi."},
+ {b:'quiz',q:"Formulani pastga tortganda F1 katak o'zgarmasligi uchun nima yozamiz?",o:["$F$1","F1","\"F1\""],a:0,w:"$ belgisi ustun va qatorni qotiradi. F4 tugmasi buni tez qiladi."},
  {b:'task',t:"Amaliyot: jadvalni aqlli qilamiz",x:ol(["8-dars jadvaliga IF bilan “O'tdi/Yiqildi” ustuni","COUNTIF bilan nechta o'quvchi o'tganini hisoblang","O'rtacha baholar bo'yicha ustunli diagramma","O'qituvchi bergan AI formulasidagi xatoni toping va tuzating"]),
   n:"Xato formula misoli: =IF(C2>60;...) (aynan 60 ni yiqitadi) yoki diapazon C2:C10 o'rniga C2:C9."},
  {b:'home',t:"Uy vazifasi",x:ul(["Xarajatlar jadvaliga toifa ustuni qo'shing: oziq-ovqat, transport, boshqa","SUMIF bilan har toifa jami","Doiraviy diagramma"])}
@@ -672,13 +835,13 @@ const LESSONS=[
  {b:'hand',t:"Dizayn qoidalari",x:ol(["<b>1 slayd = 1 fikr</b>","6 qatordan ko'p emas","Katta shrift: matn 28 dan, sarlavha 40 dan","Matn va fon kontrasti: oq fonda qora matn","Animatsiya kam: faqat kerak joyda"]),
   d:`<div class="warn"><b>Odatiy xato:</b> referat matnini slaydga to'liq ko'chirish. Slaydda kalit so'zlar, gaplarni esa o'zingiz aytasiz.</div>`},
  {b:'ai',t:"AI bilan qoralama",full:1,x:flow([{t:"Prompt",d:"Gamma yoki Copilot",c:'c-bl'},{t:"8 slaydlik qoralama"},{t:"PowerPoint ga eksport"},{t:"Siz tahrirlaysiz",d:"qoidalar bo'yicha",c:'c-or'}])+`<div style="height:.6em"></div>`+prompt("Mening sevimli sportim futbol haqida 7-sinf o'quvchisi uchun 7 slaydlik taqdimot tuz. Har slaydda 3 qatordan ko'p bo'lmasin. Oxirida 1 ta savol slaydi.")},
- {b:'ai',t:"AI bilan rasm",x:ul(["Canva yoki Copilot Designer","Prompt: nima + uslub + ranglar","Natija yoqmasa, promptni o'zgartiring"])+prompt("Kosmosdagi mushuk, multfilm uslubida, yorqin ranglar"),
+ {b:'ai',t:"AI bilan rasm",x:ul(["Canva yoki Microsoft Designer","Prompt: nima + uslub + ranglar","Natija yoqmasa, promptni o'zgartiring"])+prompt("Kosmosdagi mushuk, multfilm uslubida, yorqin ranglar"),
   d:cmp({c:'good',h:"Mumkin",i:["Bezak va illyustratsiya","Fantastik rasmlar"]},{c:'bad',h:"Mumkin emas",i:["AI rasmini haqiqiy surat deb ko'rsatish","Real odamlarning soxta rasmini yasash"]})},
  {b:'hand',t:"PowerPoint da qo'lda",x:keys([["Ctrl+M","Yangi slayd"],["F5","Boshidan ko'rsatish"],["Shift+F5","Joriy slayddan"],["Esc","Ko'rsatishdan chiqish"]]),
   d:ul(["Dizayn → mavzu tanlang","Qo'shish → o'z rasmingiz","Har slaydni qoidalar bo'yicha tekshiring","Fayl → Eksport → PDF"])},
  {b:'hand',t:"Taqdimot qilish",x:ul(["Slaydni o'qimang, gapirib bering","1 slayd taxminan 20–30 soniya","Tomoshabinga qarang","Uyda 2 daqiqaga mashq qiling"]),
   d:`<p style="font-size:1.2em">Taqdimot <b>siz</b> uchun emas, <b>tinglovchi</b> uchun.</p>`},
- {b:'quiz',q:"Qaysi slayd yaxshiroq?",o:["15 qator mayda matn","Katta sarlavha, rasm va 3 qator","Har so'zda animatsiya"],a:1,w:"Kam matn va rasm: tinglovchi sizni eshitadi, slaydni o'qish bilan band bo'lmaydi."},
+ {b:'quiz',q:"Qaysi slayd yaxshiroq?",o:["Katta sarlavha, rasm va 3 qator","15 qator mayda matn","Har so'zda animatsiya"],a:0,w:"Kam matn va rasm: tinglovchi sizni eshitadi, slaydni o'qish bilan band bo'lmaydi."},
  {b:'task',t:"Amaliyot: “Mening sevimli ...”",x:ol(["Mavzu tanlang: sport, hayvon, kitob, o'yin, shahar","AI bilan 6–8 slaydlik qoralama","O'z rasmlaringizni qo'shing, qoidalar bo'yicha tozalang",".pptx va .pdf qilib Codial_Ism/10_Taqdimot ga saqlang","Guruhga 2 daqiqalik chiqish"])},
  {b:'home',t:"Uy vazifasi",x:ul(["Taqdimotni oilangizga ko'rsating","Ulardan 1 ta maslahat yozib keling va slaydni yaxshilang"])}
  ]},
@@ -705,13 +868,13 @@ const LESSONS=[
   d:`<div class="warn"><b>Oilaviy maxfiy so'z:</b> oilangiz bilan bitta so'z kelishib oling. Shubhali qo'ng'iroqda shu so'zni so'rang.</div>`},
  {b:'ai',t:"AI: ikkinchi fikr",full:1,x:prompt("Mana shu xabar firibgarlikka o'xshaydimi? Belgilarini sanab ber: “Kartangiz bloklandi. Ochish uchun kodni shu raqamga yuboring.”"),
   d:`<p>AI belgilarni ko'rsatib beradi, lekin <b>oxirgi qarorni o'zingiz qilasiz</b>. AI ga haqiqiy kod, parol yoki karta raqamini hech qachon yozmang.</p>`},
- {b:'quiz',q:"SMS: “Kartangiz bloklandi, kodni shu raqamga yuboring”. Nima qilasiz?",o:["Kodni yuboraman","Bankning rasmiy raqamiga o'zim qo'ng'iroq qilaman","Havolani ochib ko'raman"],a:1,w:"Bank hech qachon SMS kodni so'ramaydi. Rasmiy raqam karta orqasida yozilgan."},
+ {b:'quiz',q:"SMS: “Kartangiz bloklandi, kodni shu raqamga yuboring”. Nima qilasiz?",o:["Kodni yuboraman","Havolani ochib ko'raman","Bankning rasmiy raqamiga o'zim qo'ng'iroq qilaman"],a:2,w:"Bank hech qachon SMS kodni so'ramaydi. Rasmiy raqam karta orqasida yozilgan."},
  {b:'task',t:"Amaliyot: guruh va xavfsizlik",x:ol(["Guruh bo'lib bitta Google Docs: har kim bitta qism yozadi","O'qituvchiga “Izohlovchi” huquqini bering","O'qituvchi bergan 5 ta xabardan fishinglarini toping va belgisini ayting","Codial_Ism papkangizni Google Drive ga yuklang"])},
  {b:'home',t:"Uy vazifasi",x:ul(["Ota-onangiz bilan Google akkauntda 2FA ni yoqing","Oilaviy maxfiy so'zni kelishib oling (hech kimga aytmang, darsda ham)"])}
  ]},
 /* ---------------- 12 ---------------- */
 {t:"Yakuniy loyiha va himoya",goal:"Kurs davomida o'rganilganlarni bitta portfolio papkada jamlash va himoya qilish.",
- tags:["Portfolio papka","Himoya","Sertifikat"],
+ tags:["Portfolio papka","Himoya","Baholash"],
  today:["Topshiriq","Papka tuzilishi","Talablar","Topshirish","Himoya","Baholash"],
  s:[
  {b:'task',t:"Topshiriq",x:`<p>Mavzulardan birini tanlang:</p>`+ul(["Mening kelajak kasbim","Mahallamdagi muammo va yechim","Sevimli sport yoki o'yin tarixi","Shahrimiz tarixi"]),
@@ -742,31 +905,76 @@ const LESSONS=[
 const app=document.getElementById('app');
 const BADGE={hand:["Qo'lda",'t-hand'],ai:['AI bilan','t-ai'],task:['Amaliyot','t-task'],quiz:['Savol','t-quiz'],home:['Uy vazifasi','t-home']};
 const pos={};
-let cur=null;
+let cur=null,dir=0,lastP=0,timers=[];
+const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+const store={get(k){try{return localStorage.getItem(k)}catch(_){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(_){}}};
+const isDark=()=>{const t=document.documentElement.dataset.theme;return t?t==='dark':matchMedia('(prefers-color-scheme: dark)').matches};
+const notesOff=()=>store.get('ks-notes')==='off';
+function applyPrefs(){
+  const th=store.get('ks-theme');
+  if(th)document.documentElement.dataset.theme=th;else delete document.documentElement.dataset.theme;
+  document.body.classList.toggle('notes-off',notesOff());
+}
+const themeBtn=()=>`<button class="ibtn" data-theme-t aria-label="Yorug' yoki qorong'i rejim" title="Yorug' / qorong'i">${isDark()?'☀':'☾'}</button>`;
+
+/* staggered reveal + looping highlights for whatever was just rendered */
+function enhance(root){
+  timers.forEach(clearInterval);timers=[];
+  const tag=(sel,cls)=>root.querySelectorAll(sel).forEach(box=>[...box.children].forEach((el,i)=>{el.style.setProperty('--i',i);el.classList.add(cls)}));
+  tag('.slide ul,.slide ol,.flow,.stack,.opts,.flags,.tbl tbody','rv');
+  tag('.keys,.cmp,.rvkf,.today','rv-pop');
+  root.querySelectorAll('.key').forEach(k=>k.querySelectorAll('kbd').forEach((b,j)=>b.style.setProperty('--k',j)));
+  root.querySelectorAll('.slide .flag').forEach((f,i)=>f.style.setProperty('--i',i));
+  root.querySelectorAll('.slide .prompt,.slide .warn,.slide .phone').forEach((p,i)=>{p.style.setProperty('--i',i+1);p.classList.add('rv')});
+  if(reduce.matches){root.querySelectorAll('svg').forEach(s=>s.pauseAnimations&&s.pauseAnimations());return;}
+  // flows and layer stacks: light up one step at a time, on a loop
+  root.querySelectorAll('.flow,.stack').forEach(box=>{
+    const steps=[...box.children].filter(c=>!c.classList.contains('fa'));if(steps.length<2)return;
+    let k=-1;const tick=()=>{steps.forEach(s=>s.classList.remove('lit'));k=(k+1)%(steps.length+1);if(k<steps.length)steps[k].classList.add('lit')};
+    timers.push(setTimeout(()=>{tick();timers.push(setInterval(tick,1100))},1200));
+  });
+}
+
+/* shrink the slide font until it fits the 16:9 stage; measured on an unanimated clone */
+function fit(){
+  const sl=app.querySelector('.slide'),st=document.getElementById('stage');if(!sl||!st)return;
+  const c=sl.cloneNode(true);c.classList.add('measure');c.style.fontSize='';
+  c.style.width=sl.offsetWidth+'px';c.style.height=sl.offsetHeight+'px';
+  st.appendChild(c);
+  let fs=parseFloat(getComputedStyle(c).fontSize);const base=fs;
+  while(c.scrollHeight>c.clientHeight+1&&fs>11){fs-=.5;c.style.fontSize=fs+'px';}
+  c.remove();
+  sl.style.fontSize=fs<base?fs+'px':'';
+}
+let fitW=0;
+const ro=new ResizeObserver(es=>{const w=es[0].contentRect.width;if(Math.abs(w-fitW)>1){fitW=w;fit();}});
 
 function home(){
   document.title='Kompyuter savodxonligi + AI';
+  timers.forEach(clearInterval);timers=[];
+  let ci=0;
   app.innerHTML=`
   <header class="hero">
-    <span class="eyebrow">Codial · O'quv reja · 12 dars</span>
+    <div class="hero-top"><span class="eyebrow">Codial · O'quv reja · 12 dars</span><div class="tools">${themeBtn()}</div></div>
     <h1>Kompyuter savodxonligi <span>+ AI</span></h1>
     <p>Bugun matn, formula va slaydni AI soniyalarda yozib beradi. Lekin faylni saqlash, papkani tartiblash, hujjatni tayyor holga keltirish va AI xatosini topish insonning ishi. Kurs shu ikki ko'nikmani birga o'rgatadi.</p>
   </header>
   <section class="pillars">
-    <div class="pillar"><span class="tag t-hand">Qo'lda</span><h3>AI qila olmaydigan ishlar</h3><ul><li>Windows, fayl va papkalar</li><li>Formatlash, saqlash, PDF, chop etish</li><li>Fleshka, arxiv, bulut, zaxira</li><li>Xavfsizlik: parol, 2FA, fishing</li></ul></div>
-    <div class="pillar"><span class="tag t-ai">AI bilan</span><h3>AI dan samarali foydalanish</h3><ul><li>R-V-K-F formulasi bilan prompt</li><li>AI javobini tekshirish</li><li>AI qoralamasidan tayyor mahsulot</li><li>AI ga nimani bermaslik</li></ul></div>
+    <div class="pillar" style="--i:2"><span class="tag t-hand">Qo'lda</span><h3>AI qila olmaydigan ishlar</h3><ul><li>Windows, fayl va papkalar</li><li>Formatlash, saqlash, PDF, chop etish</li><li>Fleshka, arxiv, bulut, zaxira</li><li>Xavfsizlik: parol, 2FA, fishing</li></ul></div>
+    <div class="pillar" style="--i:3"><span class="tag t-ai">AI bilan</span><h3>AI dan samarali foydalanish</h3><ul><li>R-V-K-F formulasi bilan prompt</li><li>AI javobini tekshirish</li><li>AI qoralamasidan tayyor mahsulot</li><li>AI ga nimani bermaslik</li></ul></div>
   </section>
   <section class="timing">
     <h3>Har bir dars: 90 daqiqa, avval qo'lda, keyin AI bilan</h3>
     <div class="tbar">
-      <div style="flex:15;background:var(--ink);color:var(--bg)"><b>15</b>Nazariya</div>
-      <div style="flex:40;background:var(--orange)"><b>40</b>Qo'lda amaliyot</div>
-      <div style="flex:25;background:var(--blue)"><b>25</b>AI bilan tezlashtirish</div>
-      <div style="flex:10;background:var(--green)"><b>10</b>Tekshiruv</div>
+      <div style="flex:15;background:var(--ink);color:var(--bg);--i:0"><b>15</b>Nazariya</div>
+      <div style="flex:40;background:var(--orange);--i:1"><b>40</b>Qo'lda amaliyot</div>
+      <div style="flex:25;background:var(--blue);--i:2"><b>25</b>AI bilan tezlashtirish</div>
+      <div style="flex:10;background:var(--green);--i:3"><b>10</b>Tekshiruv</div>
     </div>
+    <small>6 va 8-darslar AI siz o'tadi: o'sha 25 daqiqa qo'lda mashqqa beriladi. AI ularning davomida, 7 va 9-darslarda qo'shiladi.</small>
   </section>
   ${MODULES.map(m=>`<section class="module"><div class="module-h"><span class="eyebrow">Modul ${m.n}</span><h2>${m.t}</h2><p>${m.d}</p></div>
-    <div class="cards">${m.l.map(n=>{const L=LESSONS[n-1];return `<button class="card" data-go="${n}"><span class="num">${n}</span><h3>${L.t}</h3><p>${L.goal}</p><span class="chips">${L.tags.map(t=>`<span class="chip">${t}</span>`).join('')}</span></button>`}).join('')}</div></section>`).join('')}
+    <div class="cards">${m.l.map(n=>{const L=LESSONS[n-1];return `<button class="card" data-go="${n}" style="--i:${ci++}"><span class="num">${n}</span><h3>${L.t}</h3><p>${L.goal}</p><span class="chips">${L.tags.map(t=>`<span class="chip">${t}</span>`).join('')}</span></button>`}).join('')}</div></section>`).join('')}
   <footer class="foot">
     <div><b>Kim uchun:</b> 6–9-sinf o'quvchilari va kattalar. Kompyuter bilan deyarli ishlamagan odam ham boshlay oladi.</div>
     <div><b>Bepul vositalar:</b> Windows 10/11, MS Office yoki Google Docs, ChatGPT, Gemini, Copilot, Canva, Gamma.</div>
@@ -776,26 +984,38 @@ function home(){
 }
 
 function slideHTML(s,L,n){
+  const an=dir>0?'in-r':dir<0?'in-l':'in-0';
+  return slideInner(s,L,n).replace('class="slide','class="slide '+an);
+}
+function slideInner(s,L,n){
   if(s.cover) return `<div class="slide cover"><span class="eyebrow">Modul ${MODULES.find(m=>m.l.includes(n)).n} · 90 daqiqa</span><span class="big">${n}-dars</span><h2>${L.t}</h2><p class="goal">${L.goal}</p><div class="today">${L.today.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
   const [bl,bc]=BADGE[s.b];
-  if(s.b==='quiz') return `<div class="slide quiz"><span class="tag ${bc}">${bl}</span><h2>${s.q}</h2><div class="opts">${s.o.map((o,i)=>`<button class="opt" data-i="${i}" data-a="${s.a}"><span class="l">${'ABC'[i]}</span>${o}</button>`).join('')}</div><p class="why" hidden>${s.w}</p></div>`;
+  if(s.b==='quiz') return `<div class="slide quiz"><span class="tag ${bc}">${bl}</span><h2>${s.q}</h2><div class="opts">${s.o.map((o,i)=>`<button class="opt" data-i="${i}" data-a="${s.a}"><span class="l">${'ABC'[i]}</span>${o}</button>`).join('')}</div><p class="why" role="status" hidden>${s.w}</p></div>`;
   return `<div class="slide"><span class="tag ${bc}">${bl}</span><h2>${s.t}</h2>
     <div class="sl-grid ${s.full||!s.d?'full':''}"><div>${s.x||''}</div>${s.d?`<div class="fig">${s.d}</div>`:''}</div></div>`;
 }
 
 function lesson(n){
   const L=LESSONS[n-1];const all=[{cover:1},...L.s];
-  if(pos[n]==null)pos[n]=0;const i=Math.min(pos[n],all.length-1);const s=all[i];
+  if(pos[n]==null)pos[n]=0;const i=Math.max(0,Math.min(pos[n],all.length-1));pos[n]=i;const s=all[i];
+  const sameLesson=cur&&cur.n===n;
   cur={n,len:all.length};
   document.title=`${n}-dars · ${L.t}`;
+  try{history.replaceState(null,'','#dars-'+n+(i?'/'+(i+1):''));}catch(_){}
+  // keep keyboard focus on the control that was used
+  const a=document.activeElement;let fsel=null;
+  if(a&&app.contains(a)){if(a.dataset.step)fsel=`[data-step="${a.dataset.step}"]`;else if(a.dataset.to!=null)fsel=`[data-to="${i}"]`;else if('fs' in a.dataset)fsel='[data-fs]';}
+  const p=(i+1)/all.length*100,fromP=sameLesson?lastP:0;lastP=p;
   const prevL=n>1?`<button class="btn" data-go="${n-1}">← ${n-1}-dars</button>`:'<span></span>';
   const nextL=n<12?`<button class="btn primary" data-go="${n+1}">${n+1}-dars →</button>`:'<span></span>';
-  const note=s.n||(s.cover?"Darsni shu slayddan boshlang: bolalarga bugun nimani o'rganishini ko'rsating. Slaydlar orasida ← → tugmalari yoki pult bilan yuring.":'');
+  const note=s.n||(s.cover?"Darsni shu slayddan boshlang: bolalarga bugun nimani o'rganishini ko'rsating. Slaydlar orasida ← → tugmalari, pult yoki telefonda surish bilan yuring. F: to'liq ekran.":'');
   const stageWasFull=document.fullscreenElement&&document.fullscreenElement.id==='stage';
   const html=`
   <div class="topbar"><button class="btn" data-home>← Barcha darslar</button>
-    <div class="lesson-title"><span class="eyebrow">${n}-dars</span><h1>${L.t}</h1></div></div>
+    <div class="lesson-title"><span class="eyebrow">${n}-dars</span><h1>${L.t}</h1></div>
+    <div class="tools"><button class="btn" data-notes aria-pressed="${notesOff()}">${notesOff()?"Izohlarni ko'rsatish":'Izohlarni yashirish'}</button>${themeBtn()}</div></div>
   <div class="stage" id="stage">${slideHTML(s,L,n)}
+    <div class="prog" aria-hidden="true"><i style="--p:${fromP}%"></i></div>
     <div class="bar"><button class="ibtn" data-step="-1" aria-label="Oldingi slayd">←</button>
       <div class="dots">${all.map((x,j)=>`<button class="${j===i?'on':''} ${x.b==='quiz'?'q':''}" data-to="${j}" aria-label="${j+1}-slayd"></button>`).join('')}</div>
       <span class="count">${i+1} / ${all.length}</span>
@@ -809,39 +1029,69 @@ function lesson(n){
     const nt=app.querySelector('.note');const nn=tmp.querySelector('.note');
     if(nt&&nn)nt.replaceWith(nn);else if(nt)nt.remove();else if(nn)st.after(nn);
   } else app.innerHTML=html;
+  dir=0;
+  const st=document.getElementById('stage');
+  enhance(st);
+  ro.disconnect();fitW=st.clientWidth;ro.observe(st);fit();
+  requestAnimationFrame(()=>{const bar=st.querySelector('.prog i');if(bar)bar.style.setProperty('--p',p+'%')});
+  if(fsel)app.querySelector(fsel)?.focus({preventScroll:true});
 }
 
 function route(){
-  const m=/^#dars-(\d{1,2})$/.exec(location.hash);
+  const m=/^#dars-(\d{1,2})(?:\/(\d{1,2}))?$/.exec(location.hash);
   const n=m?+m[1]:0;
-  if(n>=1&&n<=12){lesson(n);} else {cur=null;home();}
+  if(n>=1&&n<=12){if(m[2])pos[n]=+m[2]-1;lesson(n);} else {cur=null;ro.disconnect();home();}
 }
-function go(n){ if(location.hash==='#dars-'+n) route(); else location.hash='dars-'+n; window.scrollTo(0,0);}
-function step(d){ if(!cur)return; const nx=Math.max(0,Math.min(cur.len-1,(pos[cur.n]||0)+d)); if(nx!==pos[cur.n]){pos[cur.n]=nx;lesson(cur.n);} }
+function go(n){ dir=0; if(location.hash==='#dars-'+n) route(); else location.hash='dars-'+n; window.scrollTo(0,0);}
+function jump(nx){ if(!cur)return; nx=Math.max(0,Math.min(cur.len-1,nx)); const c=pos[cur.n]||0; if(nx!==c){dir=Math.sign(nx-c);pos[cur.n]=nx;lesson(cur.n);} }
+const step=d=>cur&&jump((pos[cur.n]||0)+d);
+function toggleFs(){const st=document.getElementById('stage');if(!st)return;
+  try{ if(document.fullscreenElement) document.exitFullscreen(); else st.requestFullscreen().catch(()=>{}); }catch(_){}}
+function burst(st){
+  const b=document.createElement('div');b.className='burst';
+  const cols=['--blue','--orange','--green','--yellow','--red'];
+  for(let k=0;k<28;k++){const i=document.createElement('i');const ang=Math.random()*Math.PI*2,r=120+Math.random()*220;
+    i.style.cssText=`left:50%;top:45%;background:var(${cols[k%5]});--x:${Math.cos(ang)*r}px;--y:${Math.sin(ang)*r-80}px;animation-delay:${Math.random()*.15}s`;b.appendChild(i);}
+  st.appendChild(b);setTimeout(()=>b.remove(),1500);
+}
 
 app.addEventListener('click',e=>{
   const t=e.target.closest('button');if(!t)return;
   if(t.dataset.go){go(+t.dataset.go);return;}
-  if('home' in t.dataset){location.hash='';history.replaceState(null,'',location.pathname+location.search);route();return;}
+  if('home' in t.dataset){try{history.pushState(null,'',location.pathname+location.search);}catch(_){location.hash='';}route();return;}
   if(t.dataset.step){step(+t.dataset.step);return;}
-  if(t.dataset.to){pos[cur.n]=+t.dataset.to;lesson(cur.n);return;}
-  if('fs' in t.dataset){const st=document.getElementById('stage');
-    try{ if(document.fullscreenElement) document.exitFullscreen(); else st.requestFullscreen().catch(()=>{}); }catch(_){}
-    return;}
+  if(t.dataset.to){jump(+t.dataset.to);return;}
+  if('fs' in t.dataset){toggleFs();return;}
+  if('themeT' in t.dataset){store.set('ks-theme',isDark()?'light':'dark');applyPrefs();t.textContent=isDark()?'☀':'☾';return;}
+  if('notes' in t.dataset){store.set('ks-notes',notesOff()?'on':'off');applyPrefs();t.textContent=notesOff()?"Izohlarni ko'rsatish":'Izohlarni yashirish';t.setAttribute('aria-pressed',notesOff());fit();return;}
   if(t.classList.contains('opt')){
     const a=+t.dataset.a,i=+t.dataset.i,box=t.parentElement;
-    box.querySelectorAll('.opt').forEach(b=>{b.classList.remove('ok','no'); if(+b.dataset.i===a)b.classList.add('ok');});
+    box.querySelectorAll('.opt').forEach(b=>{b.classList.remove('ok','no','rv'); if(+b.dataset.i===a)b.classList.add('ok');});
     if(i!==a)t.classList.add('no');
+    else if(!reduce.matches)burst(document.getElementById('stage'));
     box.nextElementSibling.hidden=false;
   }
 });
 document.addEventListener('keydown',e=>{
-  if(!cur||e.target.closest('input,textarea'))return;
-  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();step(1);}
-  else if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();step(-1);}
+  const tg=e.target instanceof Element?e.target:document.body;
+  if(!cur||e.altKey||e.ctrlKey||e.metaKey||tg.closest('input,textarea,select'))return;
+  const onBtn=tg.closest('button');
+  if(e.key==='ArrowRight'||e.key==='PageDown'||(e.key===' '&&!onBtn)){e.preventDefault();step(1);}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();step(-1);}
+  else if(e.key==='Home'){e.preventDefault();jump(0);}
+  else if(e.key==='End'){e.preventDefault();jump(cur.len-1);}
+  else if(e.key==='f'||e.key==='F'){toggleFs();}
 });
+// swipe left / right on the slide (phones, tablets, smartboards)
+let sx=null,sy=0;
+app.addEventListener('touchstart',e=>{const t=e.touches[0];sx=e.target.closest('#stage')&&!e.target.closest('.tblwrap')?t.clientX:null;sy=t.clientY;},{passive:true});
+app.addEventListener('touchend',e=>{if(sx==null||!cur)return;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;sx=null;
+  if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)step(dx<0?1:-1);},{passive:true});
+document.addEventListener('fullscreenchange',()=>{fitW=0;requestAnimationFrame(fit)});
 window.addEventListener('hashchange',route);
+applyPrefs();
 route();
+if(document.fonts)document.fonts.ready.then(()=>cur&&fit());
 </script>
 </body>
 </html>
