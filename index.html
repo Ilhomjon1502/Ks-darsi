@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Codial: Kompyuter savodxonligi + AI kursi, 12 darslik interaktiv slaydlar.">
-<meta name="theme-color" content="#2D5BE3">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='2' y='4' width='28' height='19' rx='3' fill='%232D5BE3'/%3E%3Crect x='12' y='24' width='8' height='3' fill='%2318213D'/%3E%3Crect x='8' y='27' width='16' height='3' rx='1.5' fill='%2318213D'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#1D537C">
+<link rel="icon" href="img/codial-icon.svg" type="image/svg+xml">
 <style>[hidden]{display:none!important}body{margin:0}img{max-width:100%}</style>
 <title>Kompyuter savodxonligi + AI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -99,8 +99,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .sl-grid.full{grid-template-columns:1fr;align-items:start}
 .sl-grid > *{min-width:0}
 .fig{min-width:0}
-.full .fig svg{max-height:30cqw;margin:0 auto}
-.fig svg{width:100%;height:auto;display:block;max-height:36cqw}
+.full .fig svg{max-height:calc(30cqw * var(--fz,1));margin:0 auto}
+.fig svg{width:100%;height:auto;display:block;max-height:calc(36cqw * var(--fz,1))}
 .bar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-top:2px solid var(--line);background:var(--soft);flex-wrap:wrap}
 .bar .count{font-family:var(--f-mono);font-weight:700;font-size:.9rem}
 .dots{display:flex;gap:5px;flex:1;flex-wrap:wrap;min-width:0}
@@ -110,6 +110,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .dots button.on{background:var(--blue);transform:scale(1.35)}
 .dots button.q{background:var(--yellow)}
 .dots button.q.on{background:var(--blue)}
+.dots button.p{background:#FF9D00}
+.dots button.p.on{background:var(--blue)}
 .ibtn{border:2px solid var(--line);background:var(--surface);border-radius:10px;min-width:42px;height:38px;font-weight:800;font-size:1.05rem}
 .ibtn:hover{border-color:var(--blue)}
 .note{margin-top:14px;background:var(--surface);border:2px dashed var(--line);border-radius:14px;padding:14px 18px;display:grid;gap:4px}
@@ -219,7 +221,7 @@ kbd{font-family:var(--f-mono);font-size:.82em;font-weight:700;background:var(--s
 }
 /* ---------- responsive ---------- */
 @media (min-width: 1500px){.wrap{max-width:1400px}}
-@media (max-width: 1000px){
+@media (max-width: 1100px){
   .stage{aspect-ratio:auto}
   .slide{min-height:min(70vh,520px)}
   .stage:fullscreen .slide{min-height:0}
@@ -340,6 +342,71 @@ svg .a-ghost{animation:ghost 4s ease-in-out infinite}
 svg .a-ram{animation:ramIn 7s ease-in-out infinite;animation-delay:var(--d,0s)}
 svg .a-off{animation:powerOff 7s ease-in-out infinite}
 svg .a-dim{animation:dim 7s ease-in-out infinite}
+
+/* ---------- Codial branding ---------- */
+:root{--brand:#1D537C;--brand-o:#FF9D00}
+.t-codial{background:var(--brand-o);color:#1b1b1b}
+.logo-pill{display:inline-flex;align-items:center;background:#fff;border-radius:12px;padding:5px 12px;box-shadow:0 0 0 2px var(--line)}
+.logo-pill img{height:30px;width:auto;display:block}
+.brandbar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.brandbar .sub{color:var(--muted);font-size:.85rem;font-weight:700}
+.brandbar a{text-decoration:none}
+.hero-top{justify-content:space-between}
+/* strip under every slide */
+.promo{display:flex;align-items:center;gap:10px;padding:7px 14px;background:var(--brand);color:#fff;font-size:.88rem;font-weight:700;min-height:40px;overflow:hidden}
+.promo img{width:24px;height:24px;flex-shrink:0;border-radius:6px}
+.promo .pm{flex:1;min-width:0;animation:up .5s both;line-height:1.3}
+.promo .pm b{color:var(--brand-o)}
+.promo a{color:#fff;text-decoration:none;white-space:nowrap;border:2px solid rgba(255,255,255,.5);border-radius:99px;padding:2px 12px;transition:background .2s,color .2s}
+.promo a:hover{background:#fff;color:var(--brand)}
+.promo a.pcta{background:var(--brand-o);border-color:var(--brand-o);color:#1b1b1b}
+@media (max-width:640px){.promo a.pl{display:none}.promo{font-size:.8rem;padding:6px 10px;flex-wrap:wrap}
+  .promo .pm{flex-basis:calc(100% - 36px)}.promo a.pcta{margin-left:34px}}
+/* promo slide card */
+.bcard{background:#fff;color:#18213D;border-radius:1em;padding:1em 1.2em;display:grid;gap:.7em;border:3px solid var(--brand);box-shadow:0 .6em 1.6em -1em var(--brand)}
+.bcard img.lg{height:2.4em;width:auto;justify-self:start}
+.bcard .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.5em;text-align:center}
+.bcard .stats div{background:#EAF2F8;border-radius:.6em;padding:.35em .2em}
+.bcard .stats b{display:block;font-family:var(--f-display);font-size:1.5em;line-height:1.1;color:var(--brand)}
+.bcard .stats span{font-size:.72em;font-weight:700;color:#4a5878}
+.bcard .row{display:flex;flex-wrap:wrap;gap:.5em}
+.cta{display:inline-flex;align-items:center;gap:.4em;background:var(--brand-o);color:#1b1b1b !important;font-weight:800;text-decoration:none;border-radius:99px;padding:.4em 1em;transition:transform .2s,box-shadow .2s;animation:pulse 2.6s 1.5s ease-in-out infinite}
+.cta:hover{transform:scale(1.05);box-shadow:0 .4em 1em -.5em #000}
+.soc{display:inline-flex;align-items:center;font-weight:800;text-decoration:none;color:var(--brand) !important;border:2px solid var(--brand);border-radius:99px;padding:.25em .8em;font-size:.85em}
+.soc:hover{background:var(--brand);color:#fff !important}
+.mini{display:grid;grid-template-columns:repeat(2,1fr);gap:.5em}
+.mini div{background:var(--soft);border-radius:.7em;padding:.5em .7em;border-left:.3em solid var(--brand-o)}
+.mini b{font-family:var(--f-display);font-weight:600;display:block}
+.mini span{font-size:.82em;color:var(--muted)}
+.mini .on{background:var(--brand);color:#fff;border-left-color:var(--brand-o)}
+.mini .on span{color:#dbe9f4}
+/* home Codial section */
+.about{background:var(--brand);color:#fff;border-radius:22px;padding:clamp(18px,4vw,36px);margin-block:12px 36px;display:grid;gap:22px;position:relative;overflow:hidden}
+.about::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--brand-o);opacity:.18}
+.about h2{font-size:clamp(1.5rem,3.4vw,2.2rem)}
+.about p{margin:0;max-width:64ch;color:#dbe9f4}
+.about .eyebrow{color:var(--brand-o)}
+.nums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.nums div{background:rgba(255,255,255,.1);border-radius:14px;padding:12px 16px}
+.nums b{display:block;font-family:var(--f-display);font-size:2.2rem;line-height:1.1;color:var(--brand-o)}
+.nums span{font-size:.85rem;color:#dbe9f4;font-weight:700}
+.perks{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.perks div{background:rgba(255,255,255,.08);border-radius:12px;padding:10px 14px;display:grid;gap:2px;transition:transform .2s,background .2s}
+.perks div:hover{transform:translateY(-3px);background:rgba(255,255,255,.16)}
+.perks b{font-family:var(--f-display);font-weight:600}
+.perks span{font-size:.88rem;color:#dbe9f4}
+.dirs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.dirs a{background:#fff;color:#18213D;border-radius:14px;padding:14px 16px;text-decoration:none;display:grid;gap:4px;transition:transform .2s,box-shadow .2s;border-bottom:5px solid var(--brand-o)}
+.dirs a:hover{transform:translateY(-4px);box-shadow:0 14px 26px -16px #000}
+.dirs small{font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--brand);font-size:.7rem}
+.dirs b{font-family:var(--f-display);font-weight:600;font-size:1.1rem}
+.dirs span{font-size:.88rem;color:#4a5878}
+.contact{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.contact .cta{font-size:1.05rem}
+.contact .soc{color:#fff !important;border-color:rgba(255,255,255,.6)}
+.contact .soc:hover{background:#fff;color:var(--brand) !important}
+.sitefoot{margin-top:28px;padding-top:16px;border-top:2px solid var(--line);display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;color:var(--muted);font-size:.9rem}
+.sitefoot a{color:var(--blue);font-weight:800}
 
 @media (prefers-reduced-motion: reduce){
   *,*::before,*::after,svg *{animation:none !important;transition:none !important}
@@ -903,7 +970,74 @@ const LESSONS=[
 
 /* ===================== render ===================== */
 const app=document.getElementById('app');
-const BADGE={hand:["Qo'lda",'t-hand'],ai:['AI bilan','t-ai'],task:['Amaliyot','t-task'],quiz:['Savol','t-quiz'],home:['Uy vazifasi','t-home']};
+const BADGE={hand:["Qo'lda",'t-hand'],ai:['AI bilan','t-ai'],task:['Amaliyot','t-task'],quiz:['Savol','t-quiz'],home:['Uy vazifasi','t-home'],promo:['Codial','t-codial']};
+
+/* ===================== Codial (facts from codialinfo.uz) ===================== */
+const CO={phone:'+998 (99) 820-44-32',tel:'tel:+998998204432',site:'https://www.codialinfo.uz/',tg:'https://t.me/codialuz',ig:'https://www.instagram.com/codialuz/',yt:'https://www.youtube.com/@Codialuz',
+  addr:"Farg'ona shahri, Emirates restorani ro'parasida",logo:'img/codial-logo.svg',icon:'img/codial-icon.svg'};
+const COURSES={
+  ks:{k:"Boshlang'ich",n:"Kompyuter savodxonligi",d:"Kompyuter, internet va ofis dasturlaridan ishonchli foydalanishni o'rganing."},
+  ai:{k:"Sun'iy intellekt",n:"Vibe Coding (Sun'iy intellekt)",d:"AI vositalari yordamida g'oyalarni ishlaydigan loyihalarga aylantiring."},
+  cyber:{k:"Xavfsizlik",n:"Kiberxavfsizlik",d:"Tarmoq xavfsizligi, himoya usullari va xavflarni aniqlash asoslari."},
+  smm:{k:"Marketing",n:"SMM",d:"Kontent, maqsadli reklama, mobilografiya va dizaynni bitta yo'nalishda egallang."}
+};
+const PERKS=[
+  ["Amaliy loyihalar","Bitiruvchilar yo'nalishdan kelib chiqib 10 tadan 30 tagacha loyiha bilan bitirishadi."],
+  ["Tajribali ustozlar","Doimiy rivojlanishda bo'lgan professional ustozlar."],
+  ["Yordamchi ustozlar","Savollaringizga javob beradigan akademik yordamchi ustozlar."],
+  ["Videodarslar","Darslar video ko'rinishida yozib olinib, guruhga joylab boriladi."],
+  ["Co-working","Vazifa qilish va o'z ustingizda ishlash uchun alohida xona."],
+  ["Auksion","Har ikki oyda qimmatbaho sovg'alar yutib olish imkoniyati."],
+  ["Chegirmalar","O'quvchilar uchun turli xil chegirmalar mavjud."]
+];
+/* per lesson: which Codial course continues this topic, plus a one-line hook for the closing slide and strip */
+const LP={
+ 1:['ks',"Kompyuter yo'lidagi birinchi qadam qo'yildi. Davomini ustozlar bilan Codial da o'rganing."],
+ 2:['ks',"Tartibli fayl, tartibli fikr. Kompyuter savodxonligini Codial da chuqurroq o'rganing."],
+ 3:['ks',"Tezkor tugmalar vaqtni tejaydi. Amaliy mashqlar Codial ustozlari bilan yanada qiziqarli."],
+ 4:['ks',"Internetdan to'g'ri foydalanish zamonaviy kasblarning asosi. Codial da shu poydevordan boshlanadi."],
+ 5:['ai',"Prompt yozishni bilgan AI dan ko'proq foyda oladi. Vibe Coding da AI bilan loyiha yaratasiz."],
+ 6:['ks',"Chiroyli hujjat ish va o'qishda ustunlik beradi. Ofis dasturlarini Codial da mukammal o'rganing."],
+ 7:['ai',"AI qoralama beradi, siz yakunlaysiz. Vibe Coding: g'oyani ishlaydigan loyihaga aylantiring."],
+ 8:['ks',"Excel har qanday sohada kerak bo'ladi. Ofis dasturlarini Codial da amaliy o'rganing."],
+ 9:['ai',"AI bilan formula yozdingiz. Endi AI bilan butun loyiha yaratishni o'rganing: Vibe Coding."],
+ 10:['smm',"Chiroyli taqdimot va dizayn SMM ning asosi. Kontent, reklama va mobilografiyani Codial da egallang."],
+ 11:['cyber',"Parol, fishing, 2FA: bular kiberxavfsizlikning birinchi darslari. Davomi Codial da."],
+ 12:['all',"Kurs tugadi, yo'l davom etadi. O'zingizga mos IT yo'nalishini Codial da tanlang."]
+};
+const STRIP=[
+  "Codial · Farg'onada kompyuter va IT kurslari · 2021-yildan beri",
+  "500+ bitiruvchi: har biri 10–30 ta amaliy loyiha bilan bitiradi",
+  "Videodarslar: har dars yozib olinib, guruhga joylab boriladi",
+  "Co-working xonasi: vazifa qilish va o'z ustingizda ishlash uchun",
+  "Har ikki oyda auksion: qimmatbaho sovg'alar yutib olish imkoniyati",
+  "Yordamchi ustozlar savollaringizga javob beradi",
+  "Bepul maslahat: "+CO.phone,
+  "Telegram va Instagram: @codialuz"
+];
+const stripMsg=(n,i)=>{
+  const [c,hook]=LP[n];
+  // alternate lesson-specific and general messages so every slide differs
+  if(i%3===1){const cc=c==='all'?null:COURSES[c];return cc?`<b>${cc.n}</b> kursi: ${cc.d}`:`<b>Codial</b> yo'nalishlari: kompyuter savodxonligi, Vibe Coding, kiberxavfsizlik, SMM`;}
+  if(i%3===2)return hook.replace('Codial',"<b>Codial</b>");
+  return STRIP[Math.floor(i/3+n)%STRIP.length].replace('Codial','<b>Codial</b>');
+};
+const promoStrip=(n,i)=>`<div class="promo"><img src="${CO.icon}" alt="" width="24" height="24"><span class="pm" key="${n}-${i}">${stripMsg(n,i)}</span>
+  <a class="pl" href="${CO.site}" target="_blank" rel="noopener">codialinfo.uz</a><a class="pcta" href="${CO.tel}">☎ ${CO.phone}</a></div>`;
+const socials=()=>`<a class="soc" href="${CO.tg}" target="_blank" rel="noopener">Telegram</a><a class="soc" href="${CO.ig}" target="_blank" rel="noopener">Instagram</a><a class="soc" href="${CO.yt}" target="_blank" rel="noopener">YouTube</a>`;
+function promoSlide(n){
+  const [c,hook]=LP[n];
+  const side=c==='all'
+    ?`<div class="mini">${Object.values(COURSES).map(x=>`<div><b>${x.n}</b><span>${x.k}</span></div>`).join('')}</div>`
+    :`<div class="mini">${Object.entries(COURSES).map(([k,x])=>`<div class="${k===c?'on':''}"><b>${x.n}</b><span>${k===c?'Shu dars davomi':x.k}</span></div>`).join('')}</div>`;
+  const cc=c==='all'?null:COURSES[c];
+  return {b:'promo',t:cc?`Davomi: Codial · ${cc.n}`:"Keyingi qadam: Codial",
+    x:`<p style="font-size:1.1em"><b>${hook}</b></p>`+(cc?`<p class="lead">${cc.d}</p>`:'')+ul(["Birinchi darsdan birinchi loyiha","Tajribali va yordamchi ustozlar","Videodarslar va co-working xonasi","Ariza qoldiring: bepul maslahat olasiz"])+`<div style="margin-top:.6em">${side}</div>`,
+    d:`<div class="bcard"><img class="lg" src="${CO.logo}" alt="Codial"><div class="stats"><div><b>2021</b><span>yildan beri</span></div><div><b>500+</b><span>bitiruvchi</span></div><div><b>10–30</b><span>loyiha bilan bitirish</span></div></div>
+      <div class="row"><a class="cta" href="${CO.tel}">☎ ${CO.phone}</a></div><div class="row">${socials()}</div>
+      <div style="font-size:.8em;color:#4a5878;font-weight:700">${CO.addr}</div></div>`,
+    n:`Reklama slaydi: darsni tugatgach o'quvchilarga Codial kurslari haqida ayting. Ariza: ${CO.site}, tel: ${CO.phone}, Telegram: @codialuz.`};
+}
 const pos={};
 let cur=null,dir=0,lastP=0,timers=[];
 const reduce=matchMedia('(prefers-reduced-motion: reduce)');
@@ -942,9 +1076,11 @@ function fit(){
   c.style.width=sl.offsetWidth+'px';c.style.height=sl.offsetHeight+'px';
   st.appendChild(c);
   let fs=parseFloat(getComputedStyle(c).fontSize);const base=fs;
-  while(c.scrollHeight>c.clientHeight+1&&fs>11){fs-=.5;c.style.fontSize=fs+'px';}
+  // figures are sized in cqw, so they shrink with the text via --fz
+  while(c.scrollHeight>c.clientHeight+1&&fs>11){fs-=.5;c.style.fontSize=fs+'px';c.style.setProperty('--fz',Math.max(.45,fs/base));}
   c.remove();
-  sl.style.fontSize=fs<base?fs+'px':'';
+  if(fs<base){sl.style.fontSize=fs+'px';sl.style.setProperty('--fz',Math.max(.45,fs/base));}
+  else{sl.style.fontSize='';sl.style.removeProperty('--fz');}
 }
 let fitW=0;
 const ro=new ResizeObserver(es=>{const w=es[0].contentRect.width;if(Math.abs(w-fitW)>1){fitW=w;fit();}});
@@ -955,7 +1091,7 @@ function home(){
   let ci=0;
   app.innerHTML=`
   <header class="hero">
-    <div class="hero-top"><span class="eyebrow">Codial · O'quv reja · 12 dars</span><div class="tools">${themeBtn()}</div></div>
+    <div class="hero-top"><div class="brandbar"><a class="logo-pill" href="${CO.site}" target="_blank" rel="noopener" aria-label="Codial o'quv markazi sayti"><img src="${CO.logo}" alt="Codial"></a><span class="eyebrow">O'quv reja · 12 dars</span></div><div class="tools">${themeBtn()}</div></div>
     <h1>Kompyuter savodxonligi <span>+ AI</span></h1>
     <p>Bugun matn, formula va slaydni AI soniyalarda yozib beradi. Lekin faylni saqlash, papkani tartiblash, hujjatni tayyor holga keltirish va AI xatosini topish insonning ishi. Kurs shu ikki ko'nikmani birga o'rgatadi.</p>
   </header>
@@ -975,20 +1111,36 @@ function home(){
   </section>
   ${MODULES.map(m=>`<section class="module"><div class="module-h"><span class="eyebrow">Modul ${m.n}</span><h2>${m.t}</h2><p>${m.d}</p></div>
     <div class="cards">${m.l.map(n=>{const L=LESSONS[n-1];return `<button class="card" data-go="${n}" style="--i:${ci++}"><span class="num">${n}</span><h3>${L.t}</h3><p>${L.goal}</p><span class="chips">${L.tags.map(t=>`<span class="chip">${t}</span>`).join('')}</span></button>`}).join('')}</div></section>`).join('')}
+  <section class="about" aria-labelledby="about-h">
+    <div class="brandbar"><span class="logo-pill"><img src="${CO.logo}" alt="Codial"></span><span class="eyebrow">Codial o'quv markazi · Farg'ona</span></div>
+    <h2 id="about-h">Kelajak kasbini Codial bilan egallang</h2>
+    <p>Kompyuter savodxonligi kursi tugagach, o'qishni davom ettirmoqchimisiz? Tajribali ustozlar bilan amaliy IT bilimlarini o'rganing, haqiqiy loyihalar yarating va yangi imkoniyatlarga dadil qadam qo'ying.</p>
+    <div class="nums"><div><b data-count="2021">2021</b><span>yildan beri</span></div><div><b data-count="500" data-plus>500+</b><span>bitiruvchi</span></div><div><b>10–30</b><span>loyiha bilan bitirish</span></div></div>
+    <div class="perks">${PERKS.map(([t,d])=>`<div><b>${t}</b><span>${d}</span></div>`).join('')}</div>
+    <div class="dirs">${Object.values(COURSES).map(x=>`<a href="${CO.site}" target="_blank" rel="noopener"><small>${x.k}</small><b>${x.n}</b><span>${x.d}</span></a>`).join('')}</div>
+    <div class="contact"><a class="cta" href="${CO.tel}">☎ ${CO.phone}</a>${socials()}</div>
+    <p style="font-size:.88rem">${CO.addr}. Ariza qoldirsangiz, maslahatchi bog'lanib, mos kursni tanlashga yordam beradi.</p>
+  </section>
   <footer class="foot">
     <div><b>Kim uchun:</b> 6–9-sinf o'quvchilari va kattalar. Kompyuter bilan deyarli ishlamagan odam ham boshlay oladi.</div>
     <div><b>Bepul vositalar:</b> Windows 10/11, MS Office yoki Google Docs, ChatGPT, Gemini, Copilot, Canva, Gamma.</div>
     <div><b>Yosh chegarasi:</b> ko'p AI xizmatlari 13 yoshdan, ota-ona ruxsati bilan. Kichiklar o'qituvchi akkaunti orqali ishlaydi.</div>
-  </footer>`;
+  </footer>${siteFoot()}`;
   window.scrollTo(0,0);
+  if(!reduce.matches)app.querySelectorAll('[data-count]').forEach(el=>{
+    const end=+el.dataset.count,plus='plus' in el.dataset,start=end>1000?end-30:0,t0=performance.now();
+    const f=t=>{const k=Math.min(1,(t-t0)/1600),e=1-Math.pow(1-k,3);el.textContent=Math.round(start+(end-start)*e)+(plus&&k===1?'+':'');if(k<1)requestAnimationFrame(f)};
+    requestAnimationFrame(f);
+  });
 }
+const siteFoot=()=>`<div class="sitefoot"><span>Bu o'quv reja <b>Codial</b> o'quv markazi tomonidan tayyorlangan.</span><a href="${CO.site}" target="_blank" rel="noopener">codialinfo.uz</a><a href="${CO.tel}">${CO.phone}</a><a href="${CO.tg}" target="_blank" rel="noopener">Telegram</a><a href="${CO.ig}" target="_blank" rel="noopener">Instagram</a></div>`;
 
 function slideHTML(s,L,n){
   const an=dir>0?'in-r':dir<0?'in-l':'in-0';
   return slideInner(s,L,n).replace('class="slide','class="slide '+an);
 }
 function slideInner(s,L,n){
-  if(s.cover) return `<div class="slide cover"><span class="eyebrow">Modul ${MODULES.find(m=>m.l.includes(n)).n} · 90 daqiqa</span><span class="big">${n}-dars</span><h2>${L.t}</h2><p class="goal">${L.goal}</p><div class="today">${L.today.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
+  if(s.cover) return `<div class="slide cover"><span class="logo-pill" style="width:max-content"><img src="${CO.logo}" alt="Codial"></span><span class="eyebrow">Modul ${MODULES.find(m=>m.l.includes(n)).n} · 90 daqiqa</span><span class="big">${n}-dars</span><h2>${L.t}</h2><p class="goal">${L.goal}</p><div class="today">${L.today.map(x=>`<span>${x}</span>`).join('')}</div></div>`;
   const [bl,bc]=BADGE[s.b];
   if(s.b==='quiz') return `<div class="slide quiz"><span class="tag ${bc}">${bl}</span><h2>${s.q}</h2><div class="opts">${s.o.map((o,i)=>`<button class="opt" data-i="${i}" data-a="${s.a}"><span class="l">${'ABC'[i]}</span>${o}</button>`).join('')}</div><p class="why" role="status" hidden>${s.w}</p></div>`;
   return `<div class="slide"><span class="tag ${bc}">${bl}</span><h2>${s.t}</h2>
@@ -996,7 +1148,7 @@ function slideInner(s,L,n){
 }
 
 function lesson(n){
-  const L=LESSONS[n-1];const all=[{cover:1},...L.s];
+  const L=LESSONS[n-1];const all=[{cover:1},...L.s,promoSlide(n)];
   if(pos[n]==null)pos[n]=0;const i=Math.max(0,Math.min(pos[n],all.length-1));pos[n]=i;const s=all[i];
   const sameLesson=cur&&cur.n===n;
   cur={n,len:all.length};
@@ -1015,14 +1167,15 @@ function lesson(n){
     <div class="lesson-title"><span class="eyebrow">${n}-dars</span><h1>${L.t}</h1></div>
     <div class="tools"><button class="btn" data-notes aria-pressed="${notesOff()}">${notesOff()?"Izohlarni ko'rsatish":'Izohlarni yashirish'}</button>${themeBtn()}</div></div>
   <div class="stage" id="stage">${slideHTML(s,L,n)}
+    ${promoStrip(n,i)}
     <div class="prog" aria-hidden="true"><i style="--p:${fromP}%"></i></div>
     <div class="bar"><button class="ibtn" data-step="-1" aria-label="Oldingi slayd">←</button>
-      <div class="dots">${all.map((x,j)=>`<button class="${j===i?'on':''} ${x.b==='quiz'?'q':''}" data-to="${j}" aria-label="${j+1}-slayd"></button>`).join('')}</div>
+      <div class="dots">${all.map((x,j)=>`<button class="${j===i?'on':''} ${x.b==='quiz'?'q':''}${x.b==='promo'?'p':''}" data-to="${j}" aria-label="${j+1}-slayd"></button>`).join('')}</div>
       <span class="count">${i+1} / ${all.length}</span>
       <button class="ibtn" data-step="1" aria-label="Keyingi slayd">→</button>
       <button class="ibtn" data-fs aria-label="To'liq ekran">⛶</button></div></div>
   ${note?`<div class="note"><b>O'qituvchi uchun</b><span>${note}</span></div>`:''}
-  <div class="lesson-nav">${prevL}${nextL}</div>`;
+  <div class="lesson-nav">${prevL}${nextL}</div>${siteFoot()}`;
   if(stageWasFull){ // keep fullscreen: replace only the stage content
     const st=document.getElementById('stage');const tmp=document.createElement('div');tmp.innerHTML=html;
     st.innerHTML=tmp.querySelector('#stage').innerHTML;
@@ -1075,7 +1228,7 @@ app.addEventListener('click',e=>{
 document.addEventListener('keydown',e=>{
   const tg=e.target instanceof Element?e.target:document.body;
   if(!cur||e.altKey||e.ctrlKey||e.metaKey||tg.closest('input,textarea,select'))return;
-  const onBtn=tg.closest('button');
+  const onBtn=tg.closest('button,a');
   if(e.key==='ArrowRight'||e.key==='PageDown'||(e.key===' '&&!onBtn)){e.preventDefault();step(1);}
   else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();step(-1);}
   else if(e.key==='Home'){e.preventDefault();jump(0);}
