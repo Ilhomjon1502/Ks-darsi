@@ -413,6 +413,7 @@ svg .a-dim{animation:dim 7s ease-in-out infinite}
   .flag{background-size:100% 100%}
 }
 </style>
+<script src="translit.js"></script>
 </head>
 <body>
 
@@ -1049,7 +1050,7 @@ function applyPrefs(){
   if(th)document.documentElement.dataset.theme=th;else delete document.documentElement.dataset.theme;
   document.body.classList.toggle('notes-off',notesOff());
 }
-const themeBtn=()=>`<button class="ibtn" data-theme-t aria-label="Yorug' yoki qorong'i rejim" title="Yorug' / qorong'i">${isDark()?'☀':'☾'}</button>`;
+const themeBtn=()=>`${window.KSLang?KSLang.btn():''}<button class="ibtn" data-theme-t aria-label="Yorug' yoki qorong'i rejim" title="Yorug' / qorong'i">${isDark()?'☀':'☾'}</button>`;
 
 /* staggered reveal + looping highlights for whatever was just rendered */
 function enhance(root){

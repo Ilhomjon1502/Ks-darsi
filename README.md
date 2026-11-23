@@ -16,3 +16,4 @@ Har sahifada Codial belgilari bor: logo, har slayd tagida almashib turadigan qis
 - Telefon va planshetda: slaydni chapga yoki o'ngga surish
 - Manzil satrida dars va slayd saqlanadi, masalan `#dars-4/7`
 - "Izohlarni yashirish" tugmasi o'qituvchi izohlarini proyektorda yashiradi
+- "Кир" / "Lot" tugmasi: sayt lotin va kirill yozuvida ko'rsatiladi. Tanlov saqlanadi; havola orqali ham berish mumkin: `?lang=cyr` yoki `?lang=lat` (kirillga o'tkazish `translit.js` da, matn lotinda yoziladi)
